@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UseCases", "UseCases\UseCas
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infastructure.SqlServer", "Infastructure.SqlServer\Infastructure.SqlServer.csproj", "{BE1D5818-0061-4539-8A6E-D05931C1173F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{6D106E5F-C35F-46AF-8BB2-A327CBF7F6E7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{BE1D5818-0061-4539-8A6E-D05931C1173F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE1D5818-0061-4539-8A6E-D05931C1173F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE1D5818-0061-4539-8A6E-D05931C1173F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D106E5F-C35F-46AF-8BB2-A327CBF7F6E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D106E5F-C35F-46AF-8BB2-A327CBF7F6E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D106E5F-C35F-46AF-8BB2-A327CBF7F6E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D106E5F-C35F-46AF-8BB2-A327CBF7F6E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
