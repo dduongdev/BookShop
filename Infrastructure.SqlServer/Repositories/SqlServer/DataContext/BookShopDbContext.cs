@@ -19,6 +19,8 @@ namespace Infrastructure.SqlServer.Repositories.SqlServer.DataContext
         public DbSet<User> Users { get; set; } = default!;
         public DbSet<PaymentTransaction> PaymentTransactions { get; set; } = default!;
 
+        public BookShopDbContext(DbContextOptions<BookShopDbContext> options) : base(options) { }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
