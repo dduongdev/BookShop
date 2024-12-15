@@ -1,7 +1,4 @@
 using Infastructure.SqlServer.Repositories;
-using Infastructure.SqlServer.Repositories.SqlServer.DataContext;
-using Infastructure.SqlServer.Repositories.SqlServer.MapperProfile;
-using Infastructure.SqlServer.UnitOfWork;
 using Infrastructure.Models;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
