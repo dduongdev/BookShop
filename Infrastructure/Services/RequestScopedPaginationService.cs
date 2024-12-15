@@ -9,8 +9,6 @@ namespace Infrastructure.Services
         public int TotalItemCount { get; private set; }
         public int CurrentPageIndex { get; private set; }
         public IEnumerable<TEntity> Source { get; private set; }
-        public bool HasPrevious => CurrentPageIndex > 1;
-        public bool HasNext => CurrentPageIndex < TotalPages;
 
         public RequestScopedPaginationService(IEnumerable<TEntity> source, int pageSize)
         {
@@ -46,9 +44,7 @@ namespace Infrastructure.Services
             {
                 PageSize = this.PageSize,
                 CurrentPageIndex = this.CurrentPageIndex,
-                TotalPages = this.TotalPages,
-                HasPrevious = this.HasPrevious,
-                HasNext = this.HasNext
+                TotalPages = this.TotalPages
             };
         }
     }

@@ -8,6 +8,9 @@
 
 @section Styles {
     <link href="~/css/client/style.css" rel="stylesheet">
+    <link href="~/css/client/star_rating.css" rel="stylesheet" />
+    <link href="~/css/client/bookcard.css" rel="stylesheet" />
+    <link href="~/css/pagination.css" rel="stylesheet" />
 }
 
 <div class="container mt-4">
@@ -61,6 +64,13 @@
             await Html.RenderPartialAsync("_BookCard", book);
         }
     </div>
+
+    @{
+        var pagination = ViewBag.PaginationMetadata as Infrastructure.Models.PaginationMetadata;
+    }
+    @{
+        await Html.RenderPartialAsync("_Pagination", pagination);
+    }
 </div>
 
 @section Scripts {

@@ -1,18 +1,15 @@
 ﻿@model Infrastructure.Models.ViewModels.BookCardVM
 
 <div class="col-md-3 mb-4">
-    <a class="book-card" asp-area="Client" asp-action="Details" asp-route-id="@Model.Id">
+    <a class="book-card" asp-controller="Book" asp-action="Details" asp-route-id="@Model.Id">
         <div class="book-card__image">
             <img class="img-fluid" src="@Model.Image" alt="Book Image">
         </div>
         <div class="book-card__details">
-            <p>
-                <span class="fw-bold">@Model.Rating</span>
-                @await Html.PartialAsync("_StarRating", Model.Rating)
-            </p>
+            @await Html.PartialAsync("_StarRating", Model.Rating)
             <h5 class="book-card__title">@Model.Title</h5>
-            <p class="book-card__author">Tác giả: @Model.Author</p>
-            <p class="book-card__publisher">Nhà xuất bản: @Model.PublisherName</p>
+            <p class="book-card__author"><strong>Tác giả:</strong> @Model.Author</p>
+            <p class="book-card__publisher"><strong>Nhà xuất bản:</strong> @Model.PublisherName</p>
 
             @if (Model.DiscountPercentage.HasValue && Model.DiscountPercentage.Value > 0)
             {
@@ -21,10 +18,10 @@
                         @Model.Price.ToString("C")
                     </span>
                     <span class="text-danger ms-2">
-                        @(Model.Price * (1 - (Model.DiscountPercentage.Value / 100))).ToString("C")
+                        @((Model.Price * (1 - (Model.DiscountPercentage.Value / 100))).ToString("C"))
                     </span>
                     <span class="badge bg-warning ms-2">
-                        -@Model.DiscountPercentage.Value%
+                        - @Model.DiscountPercentage.Value%
                     </span>
                 </p>
             }

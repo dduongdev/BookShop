@@ -47,7 +47,10 @@ namespace Infrastructure.Services
             }
 
             var feedbacks = await _feedbackManager.GetByBookIdAsync(book.Id);
-            bookCardVM.Rating = (bookCardVM.Rating + feedbacks.Average(_ => _.Rating)) / 2;
+            if (feedbacks != null && feedbacks.Any())
+            {
+                bookCardVM.Rating = (bookCardVM.Rating + feedbacks.Average(_ => _.Rating)) / 2;
+            }
 
             return bookCardVM;
         }
