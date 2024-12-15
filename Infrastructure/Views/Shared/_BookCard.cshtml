@@ -1,0 +1,46 @@
+﻿@model Infrastructure.Models.ViewModels.BookCardVM
+
+<div class="col-md-3 mb-4">
+    <a class="book-card" asp-area="Client" asp-action="Details" asp-route-id="@Model.Id">
+        <div class="book-card__image">
+            <img class="img-fluid" src="@Model.Image" alt="Book Image">
+        </div>
+        <div class="book-card__details">
+            <p>
+                <span class="fw-bold">@Model.Rating</span>
+                @await Html.PartialAsync("_StarRating", Model.Rating)
+            </p>
+            <h5 class="book-card__title">@Model.Title</h5>
+            <p class="book-card__author">Tác giả: @Model.Author</p>
+            <p class="book-card__publisher">Nhà xuất bản: @Model.PublisherName</p>
+
+            @if (Model.DiscountPercentage.HasValue && Model.DiscountPercentage.Value > 0)
+            {
+                <p class="book-card__price">
+                    <span class="text-decoration-line-through text-muted">
+                        @Model.Price.ToString("C")
+                    </span>
+                    <span class="text-danger ms-2">
+                        @(Model.Price * (1 - (Model.DiscountPercentage.Value / 100))).ToString("C")
+                    </span>
+                    <span class="badge bg-warning ms-2">
+                        -@Model.DiscountPercentage.Value%
+                    </span>
+                </p>
+            }
+            else
+            {
+                <p class="book-card__price"><strong>@Model.Price.ToString("C")</strong></p>
+            }
+
+            @if (Model.Stock > 0)
+            {
+                <p class="book-card__stock text-success">Còn hàng</p>
+            }
+            else
+            {
+                <p class="book-card__stock text-danger">Hết hàng</p>
+            }
+        </div>
+    </a>
+</div>

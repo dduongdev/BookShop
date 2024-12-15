@@ -6,3 +6,113 @@
 
 @model IEnumerable<Infrastructure.Models.ViewModels.BookCardVM>
 
+@section Styles {
+    <link href="~/css/client/style.css" rel="stylesheet">
+}
+
+<div class="container mt-4">
+    <!-- Thanh lọc ngang -->
+    <form method="get" asp-controller="Book" asp-action="Index" class="row mb-4 filter-container" id="filterForm">
+        <!-- Category Select -->
+        <div class="col-md-3">
+            <label for="categorySelect" class="form-label fw-bold">Danh mục</label>
+            <select id="categorySelect" name="categoryId" class="form-select" asp-items="ViewBag.Categories">
+                <option value="">Chọn Danh mục</option>
+            </select>
+        </div>
+
+        <!-- Publisher Select -->
+        <div class="col-md-3">
+            <label for="publisherSelect" class="form-label fw-bold">Nhà xuất bản</label>
+            <select id="publisherSelect" name="publisherId" class="form-select" asp-items="ViewBag.Publishers">
+                <option value="">Chọn Nhà xuất bản</option>
+            </select>
+        </div>
+
+        <!-- Sort By Price Select -->
+        <div class="col-md-2">
+            <label for="priceSortSelect" class="form-label fw-bold">Sắp xếp theo giá</label>
+            <select id="priceSortSelect" name="priceSortOrder" class="form-select" asp-items="Html.GetEnumSelectList<PriceSortOrders>()">
+                <option value="">
+                    Chọn thứ tự
+                </option>
+            </select>
+        </div>
+
+        <!-- Sort By Date Select -->
+        <div class="col-md-2">
+            <label for="dateSortSelect" class="form-label fw-bold">Sắp xếp theo ngày</label>
+            <select id="dateSortSelect" name="dateSortOrder" class="form-select" asp-items="Html.GetEnumSelectList<DateSortOrders>()">
+                <option value="">Chọn thứ tự</option>
+            </select>
+        </div>
+
+        <!-- Search Button -->
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100" onclick="applyFilter()">Lọc sản phẩm</button>
+        </div>
+    </form>
+</div>
+
+<div class="container mt-4">
+    <div class="row">
+        @foreach (var book in Model)
+        {
+            await Html.RenderPartialAsync("_BookCard", book);
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/toogleParameterUrl.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Lấy các tham số từ URL
+            const urlParams = new URLSearchParams(window.location.search);
+
+            // Set lại giá trị cho các thẻ select nếu có trong URL
+            const categoryId = urlParams.get('categoryId');
+            const publisherId = urlParams.get('publisherId');
+            const priceSortOrder = urlParams.get('priceSortOrder')
+            const dateSortOrder = urlParams.get('dateSortOrder')
+
+            if (categoryId) {
+                document.getElementById('categorySelect').value = categoryId;
+            }
+            if (publisherId) {
+                document.getElementById('publisherSelect').value = publisherId;
+            }
+            if (priceSortOrder) {
+                document.getElementById('priceSortSelect').value = priceSortOrder;
+            }
+            if (dateSortOrder) {
+                document.getElementById('dateSortSelect').value = dateSortOrder;
+            }
+        });
+
+
+        document.getElementById('filterForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+        });
+
+
+        function applyFilter() {
+            const form = document.getElementById('filterForm');
+            const formData = new FormData(form);
+            const url = new URL(window.location.href);
+            const params = new URLSearchParams(url.search);
+
+            formData.forEach((value, key) => {
+                if (value && value.trim() !== "") {
+                    params.set(key, value);
+                } else {
+                    params.delete(key);
+                }
+            });
+
+            window.location.href = `${url.pathname}?${params}`;
+        }
+    </script>
+}
+
