@@ -2,7 +2,7 @@
 
 <div class="feedback">
     <div class="feedback__header">
-        <span class="feedback__username">@Model.Username</span>
+        <span class="feedback__username">@($"@{Model.Username}")</span>
         @{
             await Html.RenderPartialAsync("_StarRating", (double)Model.Rating);
         }

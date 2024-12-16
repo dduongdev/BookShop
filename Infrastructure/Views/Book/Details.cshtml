@@ -2,9 +2,13 @@
 
 @section Styles {
     <link href="~/css/style.css" rel="stylesheet" />
-    <link href="~/css/quantity_input.css" rel="stylesheet" />
     <link href="~/css/feedback.css" rel="stylesheet" />
     <link href="~/css/star_rating.css" rel="stylesheet" />
+}
+
+@{
+    double averageRating = ViewBag.AverageRating ?? 5;
+    int totalRating = ViewBag.TotalRating ?? 0;
 }
 
 <div class="container mt-5">
@@ -35,6 +39,15 @@
             <div class="card">
                 <div class="card-header">
                     <h3>@Model.Title</h3>
+                    <div style="display: flex; align-items: center; column-gap: 10px;">
+                        <span><strong>@averageRating</strong></span>
+                        <div>
+                            @{
+                                await Html.RenderPartialAsync("_StarRating", averageRating);
+                            }
+                        </div>
+                        <span>(@totalRating lượt đánh giá)</span>
+                    </div>
                 </div>
                 <div class="card-body">
                     <h4 class="text-danger fw-bold">
@@ -92,10 +105,6 @@
                         }
                     </p>
 
-                    @{
-                        await Html.RenderPartialAsync("_QuantityInput", Model.Stock);
-                    }
-
                     <div class="d-flex gap-2">
                         <button class="btn btn-dark flex-grow-1" @(Model.Status != Entities.Enums.EntityStatus.Active ? "disabled" : "")>Thêm vào giỏ hàng</button>
                         <button class="btn btn-success flex-grow-1" @(Model.Status != Entities.Enums.EntityStatus.Active ? "disabled" : "")>Mua ngay</button>
@@ -113,11 +122,7 @@
                 <h3>Để lại bình luận của bạn</h3>
                 <form>
                     <div class="mb-3">
-                        <label for="comment" class="form-label">Bình luận của bạn:</label>
-                        <textarea class="form-control" id="comment" rows="4" placeholder="Nhập bình luận của bạn..."></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Đánh giá của bạn:</label>
+                        <label class="form-label"><strong>Đánh giá của bạn:</strong></label>
                         <div class="feedback__rating">
                             <span class="feedback__rating-item" data-value="1">★</span>
                             <span class="feedback__rating-item" data-value="2">★</span>
@@ -125,11 +130,23 @@
                             <span class="feedback__rating-item" data-value="4">★</span>
                             <span class="feedback__rating-item" data-value="5">★</span>
                         </div>
+                        <input type="hidden" id="feedback__selectedRating" name="rating" value="0">
                     </div>
-                    <button type="submit" class="btn btn-primary">Gửi bình luận</button>
+                    <div class="mb-3">
+                        <label for="comment" class="form-label"><strong>Bình luận của bạn:</strong></label>
+                        <textarea class="form-control" id="comment" rows="3" name="comment" placeholder="Nhập bình luận của bạn..." @(ViewBag.HasPurchased ? "" : "disabled")></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" @(ViewBag.HasPurchased ? "" : "disabled")>Gửi bình luận</button>
+                    @if (!ViewBag.HasPurchased)
+                    {
+                        <div class="alert alert-warning mt-3">
+                            Bạn cần mua sản phẩm trước khi có thể để lại bình luận.
+                        </div>
+                    }
                 </form>
             </div>
         </div>
+
 
         <div class="col-md-6">
             <h3>Phản hồi của người dùng</h3>
@@ -155,22 +172,25 @@
 
 <!-- JavaScript -->
 @section Scripts {
-    <script src="~/js/quantity_input.js"></script>
     <script>
-        let selectedRating = 0;
-
         const stars = document.querySelectorAll('.feedback__rating-item');
+        const ratingInput = document.getElementById('feedback__selectedRating');
+
         stars.forEach(star => {
             star.addEventListener('click', () => {
-                selectedRating = parseInt(star.getAttribute('data-value'));
+                const selectedRating = parseInt(star.getAttribute('data-value'));
+                ratingInput.value = selectedRating; // Cập nhật giá trị cho input ẩn
+
                 // Reset tất cả sao về màu xám
-                stars.forEach(star => star.classList.remove('feedback__rating-item--selected'));
-                // Thêm màu vàng cho sao và các sao trước đó
+                stars.forEach(s => s.classList.remove('feedback__rating-item--selected'));
+
+                // Thêm màu vàng cho sao được chọn và các sao trước đó
                 for (let i = 0; i < selectedRating; i++) {
                     stars[i].classList.add('feedback__rating-item--selected');
                 }
             });
         });
+
     </script>
     <script>
         function onChangeImage(thumbnail) {

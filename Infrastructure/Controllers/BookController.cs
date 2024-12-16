@@ -4,6 +4,7 @@ using Infrastructure.Models.ViewModels;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Claims;
 using UseCases;
 
 namespace Infrastructure.Controllers
@@ -14,14 +15,16 @@ namespace Infrastructure.Controllers
         private readonly PublisherManager _publisherManager;
         private readonly CategoryManager _categoryManager;
         private readonly FeedbackManager _feedbackManager;
+        private readonly OrderManager _orderManager;
         private readonly BookProcessingService _bookProcessingService;
         private readonly BookMappingService _bookMappingService;
         private readonly FeedbackMappingService _feedbackMappingService;
 
-        public BookController(BookManager bookManager, PublisherManager publisherManager, CategoryManager categoryManager, FeedbackManager feedbackManager, BookProcessingService bookProcessingService, BookMappingService bookMappingService, FeedbackMappingService feedbackMappingService)
+        public BookController(BookManager bookManager, PublisherManager publisherManager, CategoryManager categoryManager, OrderManager orderManager, FeedbackManager feedbackManager, BookProcessingService bookProcessingService, BookMappingService bookMappingService, FeedbackMappingService feedbackMappingService)
         {
             _bookManager = bookManager;
             _publisherManager = publisherManager;
+            _orderManager = orderManager;
             _categoryManager = categoryManager;
             _feedbackManager = feedbackManager;
             _bookProcessingService = bookProcessingService;
@@ -78,6 +81,17 @@ namespace Infrastructure.Controllers
             var feedbacks = await _feedbackManager.GetByBookIdAsync(id.Value);
             var feedbackVMs = await Task.WhenAll(feedbacks.Select(feedback => _feedbackMappingService.MapToFeedbackVM(feedback)));
             ViewBag.Feedbacks = feedbackVMs;
+
+            var averageRating = feedbacks.Average(_ => _.Rating);
+            averageRating = (5 + averageRating) / 2;
+            ViewBag.AverageRating = averageRating;
+            ViewBag.TotalRating = feedbacks.Count();
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var hasPurchased = userId != null && (await _orderManager.GetAllAsync())
+                .Any(order => order.UserId == int.Parse(userId) && order.OrderItems.Any(item => item.BookId == id.Value));
+            ViewBag.HasPurchased = hasPurchased;
+
 
             return View(bookDetailsVM);
         }

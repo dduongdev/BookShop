@@ -67,8 +67,6 @@
 
     @{
         var pagination = ViewBag.PaginationMetadata as Infrastructure.Models.PaginationMetadata;
-    }
-    @{
         await Html.RenderPartialAsync("_Pagination", pagination);
     }
 </div>
