@@ -1,0 +1,110 @@
+﻿@model Infrastructure.Models.ViewModels.BookDetailsVM
+
+@section Styles {
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/css/quantity_input.css" rel="stylesheet" />
+}
+
+<div class="container mt-5">
+    @if (Model.Status == Entities.Enums.EntityStatus.Suspended)
+    {
+        <div class="alert alert-warning" role="alert">
+            <span class="text-danger">Sản phẩm này hiện đang tạm ngừng bán.</span>
+        </div>
+    }
+
+    <div class="row">
+        <!-- Cột hiển thị hình ảnh sách -->
+        <div class="col-md-6">
+            <div class="mb-3">
+                <img id="mainImage" src="@Model.Images.FirstOrDefault()" class="img-fluid rounded w-100" alt="Book Image" style="max-height: 450px; object-fit: cover;">
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                @foreach (var image in Model.Images.Select((value, index) => new { value, index }))
+                {
+                    <img src="@image.value" class="img-thumbnail thumbnail-image @(image.index == 0 ? "selected" : "")" alt="Book Thumbnail" style="width: 80px; height: 80px; cursor: pointer; object-fit: cover;" onclick="changeImage(this)">
+                }
+            </div>
+        </div>
+
+
+        <!-- Cột hiển thị thông tin sách -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>@Model.Title</h3>
+                </div>
+                <div class="card-body">
+                    <h4 class="text-danger fw-bold">
+                        @if (Model.DiscountPercentage > 0)
+                        {
+                            <span>@((Model.Price * (1 - Model.DiscountPercentage / 100)).ToString("C"))</span>
+                            <span class="text-decoration-line-through text-muted ms-2">@Model.Price.ToString("C")</span>
+                            <span class="badge bg-success ms-2">-@Model.DiscountPercentage%</span>
+                        }
+                        else
+                        {
+                            <span>@Model.Price.ToString("C")</span>
+                        }
+                    </h4>
+
+                    <p><strong>Tác giả:</strong> @Model.Author</p>
+
+                    <p><strong>Nhà xuất bản:</strong> @Model.PublisherName</p>
+
+                    <p><strong>Danh mục:</strong> @Model.CategoryName</p>
+
+                    <p><strong>Mô tả:</strong> @Model.Description</p>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="product-detail__policy-item">
+                                <i class="fa-solid fa-right-left product-detail__policy-icon"></i>
+                                <span class="product-detail__policy-content fw-bold">Đổi trả miễn phí trong vòng 15 ngày</span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="product-detail__policy-item">
+                                <i class="fa-solid fa-arrow-rotate-left product-detail__policy-icon"></i>
+                                <span class="product-detail__policy-content fw-bold">Đổi trả cực dễ chỉ cần số điện thoại</span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="product-detail__policy-item">
+                                <i class="fa-solid fa-phone product-detail__policy-icon"></i>
+                                <span class="product-detail__policy-content fw-bold">Hotline 0385.216.798 hỗ trợ từ 8h30 - 22h mỗi ngày</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="my-3">
+                        @if (Model.Stock > 0)
+                        {
+                            <span class="badge bg-success fs-5 py-2 px-3">Còn hàng: @Model.Stock</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger fs-5 py-2 px-3">Hết hàng</span>
+                        }
+                    </p>
+
+                    @{
+                        await Html.RenderPartialAsync("_QuantityInput", Model.Stock);
+                    }
+
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-dark flex-grow-1" @(Model.Status != Entities.Enums.EntityStatus.Active ? "disabled" : "")>Thêm vào giỏ hàng</button>
+                        <button class="btn btn-success flex-grow-1" @(Model.Status != Entities.Enums.EntityStatus.Active ? "disabled" : "")>Mua ngay</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript -->
+@section Scripts {
+    <script src="~/js/quantity_input.js"></script>
+}

@@ -57,5 +57,22 @@ namespace Infrastructure.Controllers
 
             return View(bookCardVMs);
         }
+
+        public async Task<IActionResult> DetailsAsync(int? id)
+        {
+            if (id == null)
+            {
+                return BadRequest();
+            }
+
+            var foundBook = await _bookManager.GetByIdAsync(id.Value);
+            if (foundBook == null)
+            {
+                return NotFound();
+            }
+
+            var bookDetailsVM = await _bookMappingService.MapToBookDetailsVM(foundBook);
+            return View(bookDetailsVM);
+        }
     }
 }
