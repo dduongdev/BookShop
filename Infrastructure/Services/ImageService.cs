@@ -17,7 +17,7 @@ namespace Infrastructure.Services
             try
             {
                 var fullyImagesDirectoryPath = Path.Combine(_webHostEnvironment.WebRootPath, Constants.ImagesPath, imagesDirectory);
-                images = Directory.GetFiles(Path.Combine(_webHostEnvironment.WebRootPath, fullyImagesDirectoryPath), "*.*").Select(file => Path.Combine("\\", fullyImagesDirectoryPath, Path.GetFileName(file))).ToList();
+                images = Directory.GetFiles(Path.Combine(_webHostEnvironment.WebRootPath, fullyImagesDirectoryPath), "*.*").Select(file => Path.Combine("\\", Constants.ImagesPath, imagesDirectory, Path.GetFileName(file))).ToList();
                 images = images.Select(_ => _.Replace("\\", "/")).ToList();
             }
             catch (Exception ex)

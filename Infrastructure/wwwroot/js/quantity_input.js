@@ -1,4 +1,4 @@
-﻿// where to use need to declare maxStock variable
+﻿// 'quantity-input' input tag must have data-max-stock attribute
 
 const quantityInput = document.getElementById('quantity-input');
 const increaseBtn = document.getElementById('quantity-input__increase-btn');

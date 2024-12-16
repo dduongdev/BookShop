@@ -16,8 +16,9 @@ namespace Infrastructure.Controllers
         private readonly FeedbackManager _feedbackManager;
         private readonly BookProcessingService _bookProcessingService;
         private readonly BookMappingService _bookMappingService;
+        private readonly FeedbackMappingService _feedbackMappingService;
 
-        public BookController(BookManager bookManager, PublisherManager publisherManager, CategoryManager categoryManager, FeedbackManager feedbackManager, BookProcessingService bookProcessingService, BookMappingService bookMappingService)
+        public BookController(BookManager bookManager, PublisherManager publisherManager, CategoryManager categoryManager, FeedbackManager feedbackManager, BookProcessingService bookProcessingService, BookMappingService bookMappingService, FeedbackMappingService feedbackMappingService)
         {
             _bookManager = bookManager;
             _publisherManager = publisherManager;
@@ -25,6 +26,7 @@ namespace Infrastructure.Controllers
             _feedbackManager = feedbackManager;
             _bookProcessingService = bookProcessingService;
             _bookMappingService = bookMappingService;
+            _feedbackMappingService = feedbackMappingService;
         }
 
         public async Task<IActionResult> Index(BookFilterCriteria filterCriteria, string? titleSearchKeyword, BookSortCriteria sortCriteria, int pageIndex = 1)
@@ -72,6 +74,11 @@ namespace Infrastructure.Controllers
             }
 
             var bookDetailsVM = await _bookMappingService.MapToBookDetailsVM(foundBook);
+
+            var feedbacks = await _feedbackManager.GetByBookIdAsync(id.Value);
+            var feedbackVMs = await Task.WhenAll(feedbacks.Select(feedback => _feedbackMappingService.MapToFeedbackVM(feedback)));
+            ViewBag.Feedbacks = feedbackVMs;
+
             return View(bookDetailsVM);
         }
     }

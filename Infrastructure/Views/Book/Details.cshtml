@@ -3,6 +3,8 @@
 @section Styles {
     <link href="~/css/style.css" rel="stylesheet" />
     <link href="~/css/quantity_input.css" rel="stylesheet" />
+    <link href="~/css/feedback.css" rel="stylesheet" />
+    <link href="~/css/star_rating.css" rel="stylesheet" />
 }
 
 <div class="container mt-5">
@@ -16,13 +18,13 @@
     <div class="row">
         <!-- Cột hiển thị hình ảnh sách -->
         <div class="col-md-6">
-            <div class="mb-3">
-                <img id="mainImage" src="@Model.Images.FirstOrDefault()" class="img-fluid rounded w-100" alt="Book Image" style="max-height: 450px; object-fit: cover;">
+            <div class="mb-3 product-detail__main-image">
+                <img id="mainImage" src="@Model.Images.FirstOrDefault()" class="img-fluid rounded w-100" alt="Book Image">
             </div>
             <div class="d-flex flex-wrap gap-2">
                 @foreach (var image in Model.Images.Select((value, index) => new { value, index }))
                 {
-                    <img src="@image.value" class="img-thumbnail thumbnail-image @(image.index == 0 ? "selected" : "")" alt="Book Thumbnail" style="width: 80px; height: 80px; cursor: pointer; object-fit: cover;" onclick="changeImage(this)">
+                    <img src="@image.value" class="product-detail__thumbnail @(image.index == 0 ? "selected" : "")" alt="Book Thumbnail" style="" onclick="onChangeImage(this)">
                 }
             </div>
         </div>
@@ -104,7 +106,87 @@
     </div>
 </div>
 
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="feedback__form">
+                <h3>Để lại bình luận của bạn</h3>
+                <form>
+                    <div class="mb-3">
+                        <label for="comment" class="form-label">Bình luận của bạn:</label>
+                        <textarea class="form-control" id="comment" rows="4" placeholder="Nhập bình luận của bạn..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Đánh giá của bạn:</label>
+                        <div class="feedback__rating">
+                            <span class="feedback__rating-item" data-value="1">★</span>
+                            <span class="feedback__rating-item" data-value="2">★</span>
+                            <span class="feedback__rating-item" data-value="3">★</span>
+                            <span class="feedback__rating-item" data-value="4">★</span>
+                            <span class="feedback__rating-item" data-value="5">★</span>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Gửi bình luận</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <h3>Phản hồi của người dùng</h3>
+            <div>
+                @{
+                    var feedbacks = ViewBag.Feedbacks as IEnumerable<Infrastructure.Models.ViewModels.FeedbackVM>;
+                }
+                @if (feedbacks != null && feedbacks.Any())
+                {
+                    foreach (var feedback in feedbacks)
+                    {
+                        await Html.RenderPartialAsync("_Feedback", feedback);
+                    }
+                }
+                else
+                {
+                    <p>Chưa có đánh giá nào.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- JavaScript -->
 @section Scripts {
     <script src="~/js/quantity_input.js"></script>
+    <script>
+        let selectedRating = 0;
+
+        const stars = document.querySelectorAll('.feedback__rating-item');
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                selectedRating = parseInt(star.getAttribute('data-value'));
+                // Reset tất cả sao về màu xám
+                stars.forEach(star => star.classList.remove('feedback__rating-item--selected'));
+                // Thêm màu vàng cho sao và các sao trước đó
+                for (let i = 0; i < selectedRating; i++) {
+                    stars[i].classList.add('feedback__rating-item--selected');
+                }
+            });
+        });
+    </script>
+    <script>
+        function onChangeImage(thumbnail) {
+            // Lấy đối tượng hình ảnh lớn
+            const mainImage = document.getElementById('mainImage');
+
+            // Thay đổi hình ảnh lớn theo hình ảnh nhỏ đã chọn (lấy src từ hình thu nhỏ)
+            mainImage.src = thumbnail.src;
+
+            // Loại bỏ lớp "selected" khỏi tất cả các hình ảnh nhỏ
+            const thumbnails = document.querySelectorAll('.product-detail__thumbnail');
+            thumbnails.forEach(item => item.classList.remove('selected'));
+
+            // Thêm lớp "selected" vào hình ảnh nhỏ được chọn
+            thumbnail.classList.add('selected');
+        }
+
+    </script>
 }
