@@ -1,0 +1,8 @@
+﻿.pagination {
+    font-size: 0.85rem; /* Giảm kích thước chữ */
+}
+
+.pagination .page-link {
+    padding: 0.4rem 0.8rem; /* Giảm padding cho các nút */
+    margin: 0 2px; /* Giảm khoảng cách giữa các nút */
+}
