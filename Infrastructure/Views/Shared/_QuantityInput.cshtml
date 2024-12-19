@@ -1,0 +1,13 @@
+﻿@model int
+
+<div class="quantity-input__wrapper">
+    <p class="quantity-input__label">Số Lượng</p>
+    <div class="quantity-input__group">
+        <button class="quantity-input__button quantity-input__button--disabled fw-bold" id="quantity-input__decrease-btn">-</button>
+        <input type="text" class="quantity-input__input" id="quantity-input" value="1" data-max-stock="@Model">
+        <button class="quantity-input__button fw-bold" id="quantity-input__increase-btn">+</button>
+    </div>
+    <div id="quantity-input__quantity-warning" class="text-danger mt-2" style="display: none;">
+        Số lượng bạn chọn đã đạt mức tối đa của sản phẩm này.
+    </div>
+</div>

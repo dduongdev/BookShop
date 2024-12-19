@@ -1,0 +1,44 @@
+﻿.feedback {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+}
+
+.feedback__header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.feedback__comment {
+    margin-top: 10px;
+    color: #34495e;
+}
+
+.feedback__created-at {
+    font-size: 0.8rem;
+    color: #7f8c8d;
+    text-align: right;
+}
+
+.feedback__form {
+    background-color: #fff;
+    padding: 30px;
+    margin-bottom: 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.feedback__rating-item {
+    font-size: 1.5rem;
+    color: #d3d3d3; /* Màu sao chưa được chọn */
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.feedback__rating-item--selected {
+    color: #f39c12; /* Màu sao đã được chọn */
+}
