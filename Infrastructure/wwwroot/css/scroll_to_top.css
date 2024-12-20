@@ -1,0 +1,106 @@
+﻿/* Định vị và tạo kiểu nút */
+.back-to-top {
+    bottom: 70px; /* Cách đáy */
+    right: 30px; /* Cách phải */
+    width: 60px; /* Kích thước tròn */
+    height: 60px; /* Kích thước tròn */
+    background: linear-gradient(45deg, #42a5f5, #1e88e5); /* Màu gradient xanh dương tươi sáng và xanh dương đậm */
+    color: white; /* Màu biểu tượng */
+    font-size: 1.8rem; /* Kích thước biểu tượng */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%; /* Nút tròn */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Đổ bóng nhẹ */
+    position: fixed; /* Đảm bảo nút cố định trên màn hình */
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, scale 0.3s ease, opacity 0.3s ease;
+    cursor: pointer;
+}
+
+    /* Hiệu ứng khi hover: phóng to, thay đổi màu nền và thêm bóng đổ */
+    .back-to-top:hover {
+        transform: scale(1.2); /* Phóng to nút */
+        background: linear-gradient(45deg, #ff7043, #ff5722); /* Đổi màu gradient sang cam */
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 50px rgba(255, 255, 255, 0.7); /* Tạo hiệu ứng bóng đổ mạnh */
+        animation: pulse-glow 1s ease-out infinite, wave 1s ease-in-out infinite, light-glow 1.5s ease-in-out infinite; /* Hiệu ứng sáng bóng và sóng */
+    }
+
+/* Hiệu ứng sáng xung quanh khi hover */
+@keyframes pulse-glow {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6), 0 0 20px rgba(255, 255, 255, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 0 30px 15px rgba(255, 255, 255, 0.8), 0 0 60px rgba(255, 255, 255, 0.5);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6), 0 0 20px rgba(255, 255, 255, 0.4);
+    }
+}
+
+/* Hiệu ứng sóng tỏa ra bên ngoài */
+@keyframes wave {
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: scale(2.5);
+        opacity: 0;
+    }
+}
+
+/* Hiệu ứng ánh sáng tỏa ra từ nút */
+@keyframes light-glow {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4), 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 0 30px 10px rgba(255, 255, 255, 0.6), 0 0 60px rgba(255, 255, 255, 0.5);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4), 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+}
+
+/* Hiệu ứng sóng tỏa ra ngoài nút */
+.back-to-top::before {
+    content: '';
+    position: absolute;
+    width: 300%; /* Tạo chiều rộng rộng hơn */
+    height: 300%; /* Tạo chiều cao rộng hơn */
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 10%, transparent 70%);
+    border-radius: 50%;
+    animation: ripple-effect 1.5s infinite;
+    z-index: -1; /* Đặt dưới nút */
+}
+
+/* Hiệu ứng sóng */
+@keyframes ripple-effect {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(2.5);
+        opacity: 0;
+    }
+}
+
+/* Kích thước nút trên màn hình nhỏ */
+@media (max-width: 768px) {
+    .back-to-top {
+        bottom: 50px;
+        right: 20px;
+        width: 50px; /* Đảm bảo kích thước tròn trên màn hình nhỏ */
+        height: 50px; /* Đảm bảo kích thước tròn trên màn hình nhỏ */
+        font-size: 1.5rem; /* Kích thước font nhỏ hơn */
+    }
+}
