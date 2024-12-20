@@ -1,0 +1,90 @@
+﻿/* Nút Search mới với hiệu ứng sáng và sóng */
+.btn-search {
+    background-color: #0288d1 !important; /* Màu nền ban đầu (xanh dương) */
+    color: white !important; /* Màu chữ trắng */
+    border: 2px solid #0288d1 !important; /* Viền nút */
+    padding: 6px 12px !important; /* Điều chỉnh lại padding để nút nhỏ hơn */
+    border-radius: 25px !important; /* Góc bo tròn nhỏ hơn */
+    font-size: 14px !important; /* Kích thước chữ nhỏ hơn */
+    cursor: pointer !important; /* Con trỏ chuột thay đổi khi hover */
+    position: relative !important; /* Để tạo hiệu ứng sóng */
+    overflow: hidden !important; /* Đảm bảo không tràn */
+    transition: all 0.3s ease !important; /* Thêm hiệu ứng cho tất cả các thay đổi */
+}
+
+    /* Hiệu ứng hover - sáng màu nền */
+    .btn-search:hover {
+        background-color: #0277bd !important; /* Màu nền khi hover */
+        color: #ffffff !important; /* Màu chữ trắng khi hover */
+        border-color: #0277bd !important; /* Viền đổi màu khi hover */
+    }
+
+    /* Hiệu ứng active - khi nhấn */
+    .btn-search:active {
+        background-color: #01579b !important; /* Màu nền khi nhấn (xanh dương tối) */
+        transform: scale(0.98) !important; /* Thu nhỏ nút khi nhấn */
+    }
+
+    /* Hiệu ứng sóng lan tỏa khi nhấn */
+    .btn-search:focus::after {
+        content: '' !important; /* Tạo một phần tử giả */
+        position: absolute !important;
+        top: 50% !important;
+        left: 50% !important;
+        width: 250% !important; /* Kích thước sóng nhỏ hơn */
+        height: 250% !important; /* Kích thước sóng nhỏ hơn */
+        background: rgba(255, 255, 255, 0.4) !important; /* Màu sóng */
+        border-radius: 50% !important; /* Tạo hình tròn cho sóng */
+        transform: translate(-50%, -50%) scale(0) !important; /* Vị trí sóng */
+        animation: ripple 0.6s linear !important; /* Hiệu ứng hoạt hình sóng */
+    }
+
+/* Tạo hiệu ứng sóng */
+@keyframes ripple {
+    to {
+        transform: translate(-50%, -50%) scale(1) !important; /* Sóng lan tỏa ra ngoài */
+        opacity: 0 !important; /* Sóng mờ dần */
+    }
+}
+
+/* Cải thiện giao diện của input tìm kiếm */
+.search-input {
+    background-color: #f0f4f8 !important; /* Màu nền sáng cho input */
+    color: #333 !important; /* Màu chữ đen */
+    border: 2px solid #0288d1 !important; /* Viền input giống như viền nút */
+    padding: 6px 12px !important; /* Điều chỉnh padding để đồng nhất với nút */
+    border-radius: 25px !important; /* Góc bo tròn nhỏ hơn, giống với nút */
+    font-size: 14px !important; /* Kích thước chữ nhỏ hơn */
+    width: 250px !important; /* Chiều rộng cố định cho input */
+    transition: all 0.3s ease !important; /* Hiệu ứng chuyển đổi mượt mà */
+}
+
+    /* Hiệu ứng hover - sáng màu nền khi hover */
+    .search-input:hover {
+        background-color: #e1effd !important; /* Màu nền sáng hơn khi hover */
+        border-color: #0277bd !important; /* Thay đổi màu viền khi hover */
+    }
+
+    /* Hiệu ứng focus - khi có tiêu điểm */
+    .search-input:focus {
+        background-color: #ffffff !important; /* Nền trắng khi focus */
+        border-color: #0288d1 !important; /* Viền xanh dương khi focus */
+        outline: none !important; /* Bỏ viền mặc định */
+    }
+
+    /* Hiệu ứng khi người dùng gõ */
+    .search-input:active {
+        background-color: #e1effd !important; /* Màu nền sáng khi nhấn */
+        border-color: #0288d1 !important; /* Viền khi nhấn */
+    }
+
+    /* Hiệu ứng khi người dùng gõ */
+    .search-input input:focus {
+        outline: none !important; /* Bỏ viền mặc định */
+        box-shadow: 0 0 5px rgba(2, 136, 209, 0.7) !important; /* Hiệu ứng bóng đổ */
+    }
+
+        /* Hiệu ứng khi người dùng gõ */
+        .search-input input:focus::placeholder {
+            color: transparent !important; /* Ẩn placeholder khi đang gõ */
+        }
