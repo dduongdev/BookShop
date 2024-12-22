@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.SqlServer.Migrations
 {
     [DbContext(typeof(BookShopDbContext))]
-    [Migration("20241214115427_UseProxies")]
-    partial class UseProxies
+    [Migration("20241222205720_ImmediateVersion")]
+    partial class ImmediateVersion
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace Infrastructure.SqlServer.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Infastructure.SqlServer.Repositories.SqlServer.DataContext.Book", b =>
+            modelBuilder.Entity("Infrastructure.SqlServer.Repositories.SqlServer.DataContext.Book", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -76,7 +76,7 @@ namespace Infrastructure.SqlServer.Migrations
                     b.ToTable("Books");
                 });
 
-            modelBuilder.Entity("Infastructure.SqlServer.Repositories.SqlServer.DataContext.CartItem", b =>
+            modelBuilder.Entity("Infrastructure.SqlServer.Repositories.SqlServer.DataContext.CartItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -102,7 +102,7 @@ namespace Infrastructure.SqlServer.Migrations
                     b.ToTable("CartItems");
                 });
 
-            modelBuilder.Entity("Infastructure.SqlServer.Repositories.SqlServer.DataContext.Category", b =>
+            modelBuilder.Entity("Infrastructure.SqlServer.Repositories.SqlServer.DataContext.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -125,7 +125,7 @@ namespace Infrastructure.SqlServer.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("Infastructure.SqlServer.Repositories.SqlServer.DataContext.Feedback", b =>
+            modelBuilder.Entity("Infrastructure.SqlServer.Repositories.SqlServer.DataContext.Feedback", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -157,7 +157,7 @@ namespace Infrastructure.SqlServer.Migrations
                     b.ToTable("Feedbacks");
                 });
 
-            modelBuilder.Entity("Infastructure.SqlServer.Repositories.SqlServer.DataContext.Order", b =>
+            modelBuilder.Entity("Infrastructure.SqlServer.Repositories.SqlServer.DataContext.Order", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -195,7 +195,7 @@ namespace Infrastructure.SqlServer.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("Infastructure.SqlServer.Repositories.SqlServer.DataContext.OrderItem", b =>
+            modelBuilder.Entity("Infrastructure.SqlServer.Repositories.SqlServer.DataContext.OrderItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -224,7 +224,7 @@ namespace Infrastructure.SqlServer.Migrations
                     b.ToTable("OrderItems");
                 });
 
-            modelBuilder.Entity("Infastructure.SqlServer.Repositories.SqlServer.DataContext.PaymentTransaction", b =>
+            modelBuilder.Entity("Infrastructure.SqlServer.Repositories.SqlServer.DataContext.PaymentTransaction", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -235,11 +235,12 @@ namespace Infrastructure.SqlServer.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("BankCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("Gateway")
-                        .HasColumnType("int");
 
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
@@ -247,19 +248,14 @@ namespace Infrastructure.SqlServer.Migrations
                     b.Property<long>("TransactionId")
                         .HasColumnType("bigint");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("PaymentTransactions");
                 });
 
-            modelBuilder.Entity("Infastructure.SqlServer.Repositories.SqlServer.DataContext.Publisher", b =>
+            modelBuilder.Entity("Infrastructure.SqlServer.Repositories.SqlServer.DataContext.Publisher", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -282,7 +278,7 @@ namespace Infrastructure.SqlServer.Migrations
                     b.ToTable("Publishers");
                 });
 
-            modelBuilder.Entity("Infastructure.SqlServer.Repositories.SqlServer.DataContext.User", b =>
+            modelBuilder.Entity("Infrastructure.SqlServer.Repositories.SqlServer.DataContext.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -323,15 +319,15 @@ namespace Infrastructure.SqlServer.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Infastructure.SqlServer.Repositories.SqlServer.DataContext.Book", b =>
+            modelBuilder.Entity("Infrastructure.SqlServer.Repositories.SqlServer.DataContext.Book", b =>
                 {
-                    b.HasOne("Infastructure.SqlServer.Repositories.SqlServer.DataContext.Category", "Category")
+                    b.HasOne("Infrastructure.SqlServer.Repositories.SqlServer.DataContext.Category", "Category")
                         .WithMany("Books")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infastructure.SqlServer.Repositories.SqlServer.DataContext.Publisher", "Publisher")
+                    b.HasOne("Infrastructure.SqlServer.Repositories.SqlServer.DataContext.Publisher", "Publisher")
                         .WithMany("Books")
                         .HasForeignKey("PublisherId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -342,15 +338,15 @@ namespace Infrastructure.SqlServer.Migrations
                     b.Navigation("Publisher");
                 });
 
-            modelBuilder.Entity("Infastructure.SqlServer.Repositories.SqlServer.DataContext.CartItem", b =>
+            modelBuilder.Entity("Infrastructure.SqlServer.Repositories.SqlServer.DataContext.CartItem", b =>
                 {
-                    b.HasOne("Infastructure.SqlServer.Repositories.SqlServer.DataContext.Book", "Book")
+                    b.HasOne("Infrastructure.SqlServer.Repositories.SqlServer.DataContext.Book", "Book")
                         .WithMany("CartItems")
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infastructure.SqlServer.Repositories.SqlServer.DataContext.User", "User")
+                    b.HasOne("Infrastructure.SqlServer.Repositories.SqlServer.DataContext.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -361,15 +357,15 @@ namespace Infrastructure.SqlServer.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Infastructure.SqlServer.Repositories.SqlServer.DataContext.Feedback", b =>
+            modelBuilder.Entity("Infrastructure.SqlServer.Repositories.SqlServer.DataContext.Feedback", b =>
                 {
-                    b.HasOne("Infastructure.SqlServer.Repositories.SqlServer.DataContext.Book", "Book")
+                    b.HasOne("Infrastructure.SqlServer.Repositories.SqlServer.DataContext.Book", "Book")
                         .WithMany("Feedbacks")
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infastructure.SqlServer.Repositories.SqlServer.DataContext.User", "User")
+                    b.HasOne("Infrastructure.SqlServer.Repositories.SqlServer.DataContext.User", "User")
                         .WithMany("Feedbacks")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -380,9 +376,9 @@ namespace Infrastructure.SqlServer.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Infastructure.SqlServer.Repositories.SqlServer.DataContext.Order", b =>
+            modelBuilder.Entity("Infrastructure.SqlServer.Repositories.SqlServer.DataContext.Order", b =>
                 {
-                    b.HasOne("Infastructure.SqlServer.Repositories.SqlServer.DataContext.User", "User")
+                    b.HasOne("Infrastructure.SqlServer.Repositories.SqlServer.DataContext.User", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -391,15 +387,15 @@ namespace Infrastructure.SqlServer.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Infastructure.SqlServer.Repositories.SqlServer.DataContext.OrderItem", b =>
+            modelBuilder.Entity("Infrastructure.SqlServer.Repositories.SqlServer.DataContext.OrderItem", b =>
                 {
-                    b.HasOne("Infastructure.SqlServer.Repositories.SqlServer.DataContext.Book", "Book")
+                    b.HasOne("Infrastructure.SqlServer.Repositories.SqlServer.DataContext.Book", "Book")
                         .WithMany("OrderItems")
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infastructure.SqlServer.Repositories.SqlServer.DataContext.Order", "Order")
+                    b.HasOne("Infrastructure.SqlServer.Repositories.SqlServer.DataContext.Order", "Order")
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -410,22 +406,18 @@ namespace Infrastructure.SqlServer.Migrations
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("Infastructure.SqlServer.Repositories.SqlServer.DataContext.PaymentTransaction", b =>
+            modelBuilder.Entity("Infrastructure.SqlServer.Repositories.SqlServer.DataContext.PaymentTransaction", b =>
                 {
-                    b.HasOne("Infastructure.SqlServer.Repositories.SqlServer.DataContext.Order", "Order")
+                    b.HasOne("Infrastructure.SqlServer.Repositories.SqlServer.DataContext.Order", "Order")
                         .WithMany()
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infastructure.SqlServer.Repositories.SqlServer.DataContext.User", null)
-                        .WithMany("PaymentTransactions")
-                        .HasForeignKey("UserId");
-
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("Infastructure.SqlServer.Repositories.SqlServer.DataContext.Book", b =>
+            modelBuilder.Entity("Infrastructure.SqlServer.Repositories.SqlServer.DataContext.Book", b =>
                 {
                     b.Navigation("CartItems");
 
@@ -434,28 +426,26 @@ namespace Infrastructure.SqlServer.Migrations
                     b.Navigation("OrderItems");
                 });
 
-            modelBuilder.Entity("Infastructure.SqlServer.Repositories.SqlServer.DataContext.Category", b =>
+            modelBuilder.Entity("Infrastructure.SqlServer.Repositories.SqlServer.DataContext.Category", b =>
                 {
                     b.Navigation("Books");
                 });
 
-            modelBuilder.Entity("Infastructure.SqlServer.Repositories.SqlServer.DataContext.Order", b =>
+            modelBuilder.Entity("Infrastructure.SqlServer.Repositories.SqlServer.DataContext.Order", b =>
                 {
                     b.Navigation("OrderItems");
                 });
 
-            modelBuilder.Entity("Infastructure.SqlServer.Repositories.SqlServer.DataContext.Publisher", b =>
+            modelBuilder.Entity("Infrastructure.SqlServer.Repositories.SqlServer.DataContext.Publisher", b =>
                 {
                     b.Navigation("Books");
                 });
 
-            modelBuilder.Entity("Infastructure.SqlServer.Repositories.SqlServer.DataContext.User", b =>
+            modelBuilder.Entity("Infrastructure.SqlServer.Repositories.SqlServer.DataContext.User", b =>
                 {
                     b.Navigation("Feedbacks");
 
                     b.Navigation("Orders");
-
-                    b.Navigation("PaymentTransactions");
                 });
 #pragma warning restore 612, 618
         }

@@ -15,10 +15,10 @@
             {
                 <p class="book-card__price">
                     <span class="text-decoration-line-through text-muted">
-                        @Model.Price.ToString("C")
+                        @String.Format(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"), "{0:c}", Model.Price)
                     </span>
                     <span class="text-danger ms-2">
-                        @((Model.Price * (1 - (Model.DiscountPercentage.Value / 100))).ToString("C"))
+                        @String.Format(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"), "{0:c}", Model.Price * (1 - Model.DiscountPercentage / 100))
                     </span>
                     <span class="badge bg-warning ms-2">
                         - @Model.DiscountPercentage.Value%
@@ -27,7 +27,7 @@
             }
             else
             {
-                <p class="book-card__price"><strong>@Model.Price.ToString("C")</strong></p>
+                <p class="book-card__price"><strong>@String.Format(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"), "{0:c}", Model.Price)</strong></p>
             }
 
             @if (Model.Stock > 0)

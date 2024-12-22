@@ -55,13 +55,13 @@
                     <h4 class="text-danger fw-bold">
                         @if (Model.DiscountPercentage > 0)
                         {
-                            <span>@((Model.Price * (1 - Model.DiscountPercentage / 100)).ToString("C"))</span>
-                            <span class="text-decoration-line-through text-muted ms-2">@Model.Price.ToString("C")</span>
+                            <span>@String.Format(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"), "{0:c}", Model.Price * (1 - Model.DiscountPercentage / 100))</span>
+                            <span class="text-decoration-line-through text-muted ms-2">@String.Format(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"), "{0:c}", Model.Price)</span>
                             <span class="badge bg-success ms-2">-@Model.DiscountPercentage%</span>
                         }
                         else
                         {
-                            <span>@Model.Price.ToString("C")</span>
+                            <span>@String.Format(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"), "{0:c}", Model.Price)</span>
                         }
                     </h4>
 
@@ -108,8 +108,13 @@
                     </p>
 
                     <div class="d-flex gap-2">
-                        <button class="btn btn-dark flex-grow-1" @(Model.Status != Entities.Enums.EntityStatus.Active ? "disabled" : "")>Thêm vào giỏ hàng</button>
-                        <button class="btn btn-success flex-grow-1" @(Model.Status != Entities.Enums.EntityStatus.Active ? "disabled" : "")>Mua ngay</button>
+                        <form style="flex: 1;">
+                            <button class="btn btn-dark flex-grow-1" style="width: 100%;" @(Model.Status != Entities.Enums.EntityStatus.Active ? "disabled" : "")>Thêm vào giỏ hàng</button>
+                        </form>
+                        <form asp-controller="Order" asp-action="Confirm" style="flex: 1;">
+                            <input asp-for="@Model.Id" name="orderedBookIds" hidden />
+                            <button class="btn btn-success flex-grow-1" style="width: 100%;" @(Model.Status != Entities.Enums.EntityStatus.Active ? "disabled" : "")>Mua ngay</button>
+                        </form>
                     </div>
                 </div>
             </div>
