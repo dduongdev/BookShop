@@ -101,7 +101,7 @@
 
                     <!-- Login/Register -->
                     <div class="d-flex auth-links">
-                        @if (User.Identity.IsAuthenticated) // Kiểm tra xem người dùng đã đăng nhập chưa
+                        @if (User?.Identity?.IsAuthenticated ?? false) // Kiểm tra xem người dùng đã đăng nhập chưa
                         {
                             <span class="me-3">Welcome, @User.Identity.Name!</span> <!-- Hiển thị tên người dùng -->
 
