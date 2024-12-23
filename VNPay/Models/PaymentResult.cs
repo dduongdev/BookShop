@@ -14,7 +14,7 @@ namespace VNPay.Models
         /// <summary>
         /// Mã tham chiếu giao dịch (Transaction reference). Đây là mã số duy nhất dùng để xác định giao dịch.
         /// </summary>
-        public int PaymentId { get; set; }
+        public long PaymentId { get; set; }
 
         /// <summary>
         /// Trạng thái thành công của giao dịch.

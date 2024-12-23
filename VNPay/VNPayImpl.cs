@@ -62,7 +62,7 @@ namespace VNPay
 
             return new PaymentResult
             {
-                PaymentId = int.Parse(vnp_TxnRef),
+                PaymentId = long.Parse(vnp_TxnRef),
                 VnpayTransactionId = long.Parse(vnp_TransactionNo),
                 IsSuccess = transactionStatusCode == TransactionStatusCode.Code_00 && responseCode == ResponseCode.Code_00 && helper.IsSignatureCorrect(vnp_SecureHash, _hashSecret),
                 Money = double.Parse(vnp_Amount),
