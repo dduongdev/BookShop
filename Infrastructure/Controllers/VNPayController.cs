@@ -1,4 +1,5 @@
 ﻿using Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UseCases;
 using VNPay;
@@ -8,6 +9,7 @@ using VNPay.Utilities;
 
 namespace Infrastructure.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class VNPayController : Controller
