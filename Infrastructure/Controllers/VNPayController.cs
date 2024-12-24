@@ -32,13 +32,13 @@ namespace Infrastructure.Controllers
         }
 
         /// <summary>
-        /// Tạo url thanh toán.
+        /// Chuyển đến trang thanh toán.
         /// </summary>
         /// <param name="money">Số tiền phải thanh toán.</param>
         /// <param name="description">Mô tả giao dịch.</param>
         /// <returns></returns>
         [HttpGet("CreatePaymentUrl")]
-        public ActionResult<string> CreatePaymentUrl(int orderId, double money, string description)
+        public ActionResult<string> RedirectToPaymentUrl(int orderId, double money, string description)
         {
             try
             {
