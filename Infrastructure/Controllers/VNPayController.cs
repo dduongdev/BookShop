@@ -46,7 +46,7 @@ namespace Infrastructure.Controllers
 
                 var request = new PaymentRequest
                 {
-                    PaymentId = orderId,
+                    PaymentId = DateTime.Now.Ticks,
                     Money = money,
                     Description = description,
                     IpAddress = ipAddress,
@@ -80,18 +80,27 @@ namespace Infrastructure.Controllers
                     var paymentResult = _vnpay.GetPaymentResult(Request.Query);
                     if (paymentResult.IsSuccess)
                     {
-                        var paymentTransaction = new PaymentTransaction
+                        var paymentDescription = paymentResult.Description;
+                        int lastSpaceIndex = paymentDescription.LastIndexOf(' ');
+                        if (lastSpaceIndex != -1 && int.TryParse(paymentDescription.Substring(lastSpaceIndex + 1), out int orderId))
                         {
-                            OrderId = paymentResult.PaymentId,
-                            BankCode = paymentResult.BankingInfor.BankCode,
-                            Amount = (decimal)(paymentResult.Money / 100),
-                            TransactionId = paymentResult.VnpayTransactionId
-                        };
+                            var paymentTransaction = new PaymentTransaction
+                            {
+                                OrderId = orderId,
+                                BankCode = paymentResult.BankingInfor.BankCode,
+                                Amount = (decimal)(paymentResult.Money / 100),
+                                TransactionId = paymentResult.VnpayTransactionId
+                            };
 
-                        var result = await _paymentTransactionManager.AddAsync(paymentTransaction);
-                        if (result.ResultCode == UseCases.TaskResults.AtomicTaskResultCodes.Failed)
+                            var result = await _paymentTransactionManager.AddAsync(paymentTransaction);
+                            if (result.ResultCode == UseCases.TaskResults.AtomicTaskResultCodes.Failed)
+                            {
+                                return BadRequest("An error occured.");
+                            }
+                        }
+                        else
                         {
-                            return BadRequest("An error occured.");
+                            return NotFound();
                         }
 
                         return Ok();
