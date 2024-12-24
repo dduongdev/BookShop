@@ -98,7 +98,7 @@ namespace Infrastructure.Controllers
 
             if (order.PaymentMethod == Entities.Enums.PaymentMethod.VNPay)
             {
-                return RedirectToAction("CreatePaymentUrl", "VNPay", new { OrderId = order.Id, Money = totalAmount, Description = $"THANH TOAN CHO DON HANG {order.Id}" });
+                return RedirectToAction("RedirectToPaymentUrl", "VNPay", new { OrderId = order.Id, Money = totalAmount, Description = $"THANH TOAN CHO DON HANG {order.Id}" });
             }
 
             return RedirectToAction("Index", "Home");
