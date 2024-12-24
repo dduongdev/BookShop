@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using UseCases;
 using UseCases.Repositories;
 using UseCases.UnitOfWork;
+using Infrastructure.Services;
+using VNPay;
 
 namespace Infrastructure
 {
@@ -97,6 +99,13 @@ namespace Infrastructure
             services.AddTransient<PublisherManager>();
             services.AddTransient<UserManager>();
             services.AddTransient<PaymentTransactionManager>();
+
+            services.AddTransient<BookProcessingService>();
+            services.AddTransient<BookMappingService>();
+            services.AddTransient<ImageService>();
+            services.AddTransient<FeedbackMappingService>();
+
+            services.AddTransient<IVNPay, VNPayImpl>();
         }
     }
 }

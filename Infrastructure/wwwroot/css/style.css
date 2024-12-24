@@ -1,0 +1,80 @@
+﻿.filter-container {
+    background-color: #fff; /* Background color */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Shadow for the 'lifted' effect */
+    border-radius: 8px; /* Rounded corners */
+    padding-top: 15px;
+    padding-bottom: 15px;
+    margin-bottom: 20px; /* Space below the filter */
+}
+
+    /* Optional: add some hover effect to enhance interactivity */
+    .filter-container:hover {
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+    }
+
+
+/* Định dạng cho hình ảnh lớn */
+.product-detail__main-image img {
+    width: 100%; /* Đảm bảo hình ảnh chiếm toàn bộ chiều rộng của container */
+    height: 500px; /* Giới hạn chiều cao tối đa của hình ảnh */
+    object-fit: cover; /* Đảm bảo hình ảnh được cắt và phủ kín khu vực chứa */
+    border-radius: 10px; /* Bo góc cho hình ảnh */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Thêm bóng mờ nhẹ cho hình ảnh */
+}
+
+/* Định dạng cho hình ảnh thu nhỏ (thumbnail) */
+.product-detail__thumbnail {
+    width: 80px; /* Đặt chiều rộng của hình ảnh thu nhỏ */
+    height: 80px; /* Đặt chiều cao của hình ảnh thu nhỏ */
+    object-fit: cover; /* Giữ tỷ lệ khung hình cho hình ảnh thu nhỏ */
+    border-radius: 5px; /* Bo góc cho hình ảnh thu nhỏ */
+    cursor: pointer; /* Đổi con trỏ khi hover vào hình ảnh thu nhỏ */
+    transition: transform 0.2s ease, border-color 0.3s ease; /* Thêm hiệu ứng khi hover */
+}
+
+    /* Hiệu ứng khi hover vào hình ảnh thu nhỏ */
+    .product-detail__thumbnail:hover {
+        transform: scale(1.05); /* Tăng kích thước hình ảnh khi hover */
+    }
+
+/* Định dạng cho container chứa các hình ảnh thu nhỏ */
+.product-detail__thumbnail-container {
+    display: flex; /* Hiển thị các hình thu nhỏ theo chiều ngang */
+    gap: 10px; /* Khoảng cách giữa các hình thu nhỏ */
+    padding: 10px 0; /* Padding cho container */
+    overflow-x: auto; /* Cho phép cuộn ngang nếu có quá nhiều hình thu nhỏ */
+    flex-wrap: wrap; /* Cho phép các hình thu nhỏ xuống dòng khi không đủ không gian */
+}
+
+/* Đánh dấu hình ảnh thu nhỏ đã được chọn */
+.product-detail__thumbnail.selected {
+    border: 2px solid #007bff; /* Đổi màu viền khi hình thu nhỏ được chọn */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.6); /* Thêm bóng sáng cho hình ảnh được chọn */
+}
+
+.product-detail__policy-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+    .product-detail__policy-item:hover {
+        background-color: #e9ecef;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+.product-detail__policy-icon {
+    font-size: 24px;
+    margin-right: 10px;
+    color: #007bff;
+}
+
+.product-detail__policy-content {
+    font-size: 16px;
+    color: #333;
+}
