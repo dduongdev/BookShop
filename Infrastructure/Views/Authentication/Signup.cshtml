@@ -7,7 +7,7 @@
     <div class="card shadow-lg" style="width: 24rem; margin: auto;">
         <div class="card-body">
             <h3 class="card-title text-center mb-4">Sign Up</h3>
-            <form asp-action="Register" method="post">
+            <form asp-action="Signup" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                 <!-- Username -->
@@ -36,6 +36,11 @@
                     <label asp-for="Phone" class="form-label">Phone</label>
                     <input asp-for="Phone" type="text" class="form-control" placeholder="Enter your phone number" required>
                     <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Address" class="form-control">Address</label>
+                    <input asp-for="Address" type="text" class="form-control" placeholder="Enter your address" />
                 </div>
 
                 <!-- Sign Up Button -->
