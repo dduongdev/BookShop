@@ -10,6 +10,8 @@ using UseCases.Repositories;
 using UseCases.UnitOfWork;
 using Infrastructure.Services;
 using VNPay;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using NuGet.Packaging.Signing;
 
 namespace Infrastructure
 {
@@ -18,6 +20,14 @@ namespace Infrastructure
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+            {
+                options.LoginPath = "/Authentication/Login";
+                options.AccessDeniedPath = "/Authentication/AccessDenied";
+                options.ExpireTimeSpan = TimeSpan.FromDays(7);
+                options.SlidingExpiration = true;
+            });
 
             RegisterInfrastructureServices(builder.Configuration, builder.Services);
 

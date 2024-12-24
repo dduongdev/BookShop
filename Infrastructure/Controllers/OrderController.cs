@@ -1,12 +1,14 @@
 ﻿using Entities;
 using Infrastructure.Models.ViewModels;
 using Infrastructure.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using UseCases;
 
 namespace Infrastructure.Controllers
 {
+    [Authorize]
     public class OrderController : Controller
     {
         private readonly UserManager _userManager;

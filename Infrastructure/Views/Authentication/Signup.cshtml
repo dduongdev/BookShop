@@ -1,0 +1,59 @@
+﻿@model Entities.User
+@{
+    ViewData["Title"] = "Signup";
+}
+
+<div class="container mt-3" style="display: flex; height: 60vh;">
+    <div class="card shadow-lg" style="width: 24rem; margin: auto;">
+        <div class="card-body">
+            <h3 class="card-title text-center mb-4">Sign Up</h3>
+            <form asp-action="Register" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <!-- Username -->
+                <div class="mb-3">
+                    <label asp-for="Username" class="form-label">Username</label>
+                    <input asp-for="Username" type="text" class="form-control" placeholder="Enter your username" required>
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+
+                <!-- Password -->
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label">Password</label>
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Enter your password" required>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <!-- Email -->
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label">Email</label>
+                    <input asp-for="Email" type="email" class="form-control" placeholder="Enter your email" required>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <!-- Phone -->
+                <div class="mb-3">
+                    <label asp-for="Phone" class="form-label">Phone</label>
+                    <input asp-for="Phone" type="text" class="form-control" placeholder="Enter your phone number" required>
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+
+                <!-- Sign Up Button -->
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Sign Up</button>
+                </div>
+            </form>
+
+            <!-- Already have an account -->
+            <div class="text-center mt-3">
+                <p>Already have an account? <a asp-action="Login" class="text-decoration-none">Login</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
