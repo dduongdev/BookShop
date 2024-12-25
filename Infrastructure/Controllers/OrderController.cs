@@ -44,7 +44,7 @@ namespace Infrastructure.Controllers
                 orderedBooks.Add(foundBook);
             }
 
-            IEnumerable<BookCardVM> bookCardVMs = await Task.WhenAll(orderedBooks.Select(book => _bookMappingService.MapToBookCardVM(book)));
+            IEnumerable<BookCardVM> bookCardVMs = await _bookMappingService.MapToBookCardVMs(orderedBooks);
 
             var userIdClaim = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userIdClaim))

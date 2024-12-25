@@ -58,7 +58,7 @@ namespace Infrastructure.Controllers
             var publishers = await _publisherManager.GetAllActiveAsync();
             ViewBag.Publishers = new SelectList(publishers, "Id", "Name");
 
-            IEnumerable<BookCardVM> bookCardVMs = await Task.WhenAll(paginatedActivateBooks.Select(book => _bookMappingService.MapToBookCardVM(book)));
+            IEnumerable<BookCardVM> bookCardVMs = await _bookMappingService.MapToBookCardVMs(paginatedActivateBooks);
 
             return View(bookCardVMs);
         }
@@ -79,11 +79,15 @@ namespace Infrastructure.Controllers
             var bookDetailsVM = await _bookMappingService.MapToBookDetailsVM(foundBook);
 
             var feedbacks = await _feedbackManager.GetByBookIdAsync(id.Value);
-            var feedbackVMs = await Task.WhenAll(feedbacks.Select(feedback => _feedbackMappingService.MapToFeedbackVM(feedback)));
+            var feedbackVMs = await _feedbackMappingService.MapToFeedbackVMs(feedbacks);
             ViewBag.Feedbacks = feedbackVMs;
 
-            var averageRating = feedbacks.Average(_ => _.Rating);
-            averageRating = (5 + averageRating) / 2;
+            var averageRating = 5.0;
+            if (feedbacks.Any())
+            {
+                averageRating = (5 + feedbacks.Average(_ => _.Rating)) / 2;
+            }
+            
             ViewBag.AverageRating = averageRating;
             ViewBag.TotalRating = feedbacks.Count();
 
