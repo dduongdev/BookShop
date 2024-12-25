@@ -1,0 +1,75 @@
+﻿@model IEnumerable<dynamic>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Giỏ hàng của bạn</h2>
+
+    <!-- Nếu giỏ hàng trống -->
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">Giỏ hàng của bạn hiện tại trống.</div>
+    }
+    else
+    {
+        <form asp-action="Confirm" method="post" asp-controller="Order">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="thead-dark">
+                        <tr class="text-center">
+                            <th>Chọn</th>
+                            <th>Tên Sản Phẩm</th>
+                            <th>Giá</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="text-center">
+                                    <!-- Tích chọn, tăng kích thước checkbox -->
+                                    <input type="checkbox" class="bookCheckbox form-check-input" name="bookIds" value="@item.BookId" />
+                                </td>
+                                <td class="text-center">
+                                    @item.BookTitle
+                                </td>
+                                <td class="text-center">@string.Format("{0:N0} đ", item.BookPrice)</td> <!-- Hiển thị giá tiền theo định dạng tiền tệ -->
+                                <td class="text-center">
+                                    <!-- Xóa sản phẩm khỏi giỏ -->
+                                    <form asp-action="DeleteItemAsync" method="post" class="d-inline">
+                                        <input type="hidden" name="bookId" value="@item.BookId" />
+                                        <button type="submit" class="btn btn-danger btn-sm">Xóa khỏi giỏ</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Nút chuyển đến trang thanh toán -->
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-success btn-lg" id="checkoutButton" disabled>
+                    Tiến hành thanh toán
+                </button>
+            </div>
+        </form>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        // Lắng nghe sự kiện thay đổi trên tất cả checkbox
+        document.querySelectorAll('.bookCheckbox').forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                // Kiểm tra có checkbox nào được chọn không
+                let isChecked = Array.from(document.querySelectorAll('.bookCheckbox')).some(function(checkbox) {
+                    return checkbox.checked;
+                });
+
+                // Kích hoạt/Disable nút "Tiến hành thanh toán"
+                document.getElementById('checkoutButton').disabled = !isChecked;
+            });
+        });
+    </script>
+}
+

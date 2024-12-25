@@ -88,3 +88,4 @@
         .search-input input:focus::placeholder {
             color: transparent !important; /* Ẩn placeholder khi đang gõ */
         }
+
