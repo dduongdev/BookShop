@@ -127,23 +127,25 @@
         <div class="col-md-6">
             <div class="feedback__form">
                 <h3>Để lại bình luận của bạn</h3>
-                <form>
+                <form asp-action="Add" asp-controller="Feedback">
+                    <input asp-for="@Model.Id" name="bookId" hidden />
                     <div class="mb-3">
                         <label class="form-label"><strong>Đánh giá của bạn:</strong></label>
                         <div class="feedback__rating">
-                            <span class="feedback__rating-item" data-value="1">★</span>
-                            <span class="feedback__rating-item" data-value="2">★</span>
-                            <span class="feedback__rating-item" data-value="3">★</span>
-                            <span class="feedback__rating-item" data-value="4">★</span>
-                            <span class="feedback__rating-item" data-value="5">★</span>
+                            <span class="feedback__rating-item" data-value="1" @(ViewBag.HasPurchased == false ? "disabled" : "")>★</span>
+                            <span class="feedback__rating-item" data-value="2" @(ViewBag.HasPurchased == false ? "disabled" : "")>★</span>
+                            <span class="feedback__rating-item" data-value="3" @(ViewBag.HasPurchased == false ? "disabled" : "")>★</span>
+                            <span class="feedback__rating-item" data-value="4" @(ViewBag.HasPurchased == false ? "disabled" : "")>★</span>
+                            <span class="feedback__rating-item" data-value="5" @(ViewBag.HasPurchased == false ? "disabled" : "")>★</span>
                         </div>
                         <input type="hidden" id="feedback__selectedRating" name="rating" value="0">
+
                     </div>
                     <div class="mb-3">
                         <label for="comment" class="form-label"><strong>Bình luận của bạn:</strong></label>
                         <textarea class="form-control" id="comment" rows="3" name="comment" placeholder="Nhập bình luận của bạn..." @(ViewBag.HasPurchased ? "" : "disabled")></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary" @(ViewBag.HasPurchased ? "" : "disabled")>Gửi bình luận</button>
+                    <button type="submit" class="btn btn-primary" id="submitFeedbackButton">Gửi bình luận</button>
                     @if (!ViewBag.HasPurchased)
                     {
                         <div class="alert alert-warning mt-3">
@@ -182,9 +184,31 @@
     <script>
         const stars = document.querySelectorAll('.feedback__rating-item');
         const ratingInput = document.getElementById('feedback__selectedRating');
+        const submitButton = document.getElementById('submitFeedbackButton');
+
+        // Kiểm tra nếu người dùng đã mua sản phẩm
+        const hasPurchased = @ViewBag.HasPurchased.ToString().ToLower();
+
+        // Hàm kiểm tra xem rating đã được chọn chưa và bật/tắt nút gửi
+        function checkRatingAndEnableButton() {
+            // Kiểm tra nếu rating đã được chọn (ratingInput.value > 0) và người dùng đã mua hàng
+            if (parseInt(ratingInput.value) > 0 && hasPurchased === true) {
+                submitButton.disabled = false; // Bật nút gửi bình luận
+            } else {
+                submitButton.disabled = true; // Giữ nút gửi bị vô hiệu hóa
+            }
+        }
+
+        // Nếu chưa mua sản phẩm, không cho chọn sao và vô hiệu hóa nút gửi
+        if (hasPurchased === "false") {
+            stars.forEach(star => star.setAttribute('disabled', true)); // Vô hiệu hóa các sao
+            submitButton.disabled = true; // Vô hiệu hóa nút gửi khi chưa mua
+        }
 
         stars.forEach(star => {
             star.addEventListener('click', () => {
+                if (hasPurchased === "false") return; // Nếu chưa mua, không cho phép chọn sao
+
                 const selectedRating = parseInt(star.getAttribute('data-value'));
                 ratingInput.value = selectedRating; // Cập nhật giá trị cho input ẩn
 
@@ -195,10 +219,18 @@
                 for (let i = 0; i < selectedRating; i++) {
                     stars[i].classList.add('feedback__rating-item--selected');
                 }
+                submitButton.disable = false;
+                // Kiểm tra và bật/tắt nút gửi bình luận
+                checkRatingAndEnableButton();
             });
         });
 
+        // Kiểm tra trạng thái rating khi trang được tải (phòng trường hợp người dùng đã chọn trước đó)
+        checkRatingAndEnableButton();
     </script>
+
+
+
     <script>
         function onChangeImage(thumbnail) {
             // Lấy đối tượng hình ảnh lớn
