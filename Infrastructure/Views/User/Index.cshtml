@@ -1,0 +1,60 @@
+﻿@{
+    var user = ViewData["User"] as Entities.User;
+    var orders = ViewData["Orders"] as List<Infrastructure.Models.ViewModels.OrderVM>;
+}
+
+<h2>User Details</h2>
+
+<h3>User Information</h3>
+<div>
+    <p><strong>Username:</strong> @user.Username</p>
+    <p><strong>Email:</strong> @user.Email</p>
+    <p><strong>Phone:</strong> @user.Phone</p>
+    <p><strong>Address:</strong> @user.Address</p>
+    <p><strong>Status:</strong> @user.Status</p>
+    <p><strong>Role:</strong> @user.Role</p>
+    <p><strong>Created At:</strong> @user.CreatedAt</p>
+</div>
+
+<h3>Order History</h3>
+@if (orders != null && orders.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Delivery Address</th>
+                <th>Phone</th>
+                <th>Created At</th>
+                <th>Payment Method</th>
+                <th>Payment Status</th>
+                <th>Items</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in orders)
+            {
+                <tr>
+                    <td>@order.Id</td>
+                    <td>@order.DeliveryAddress</td>
+                    <td>@order.DeliveryPhone</td>
+                    <td>@order.CreatedAt</td>
+                    <td>@order.PaymentMethod</td>
+                    <td>@order.PaymentStatus</td>
+                    <td>
+                        <ul>
+                            @foreach (var item in order.orderItemVMs)
+                            {
+                                <li>@item.BookTitle (x@item.Quantity)</li>
+                            }
+                        </ul>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No orders found for this user.</p>
+}
