@@ -11,10 +11,6 @@ namespace Entities
     {
         public int Id { get; set; }
         public int BookId { get; set; }
-
-        [Range(1, int.MaxValue, ErrorMessage = "Số lượng phải lớn hơn 0.")]
-        [Required(ErrorMessage = "Trường này là bắt buộc.")]
-        public required int Quantity { get; set; }
         public int UserId { get; set; }
     }
 }
