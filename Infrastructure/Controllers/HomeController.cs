@@ -37,7 +37,7 @@ namespace Infrastructure.Controllers
             RequestScopedPaginationService<Book> paginationService = new RequestScopedPaginationService<Book>(activeBooks, 12);
             IEnumerable<Book> paginatedActiveBooks = paginationService.GetItemsByPage(pageIndex);
 
-            IEnumerable<BookCardVM> bookCardVMs = await Task.WhenAll(paginatedActiveBooks.Select(book => _bookMappingService.MapToBookCardVM(book)));
+            IEnumerable<BookCardVM> bookCardVMs = await _bookMappingService.MapToBookCardVMs(activeBooks);
 
             IEnumerable<string> banners = _imageService.GetAllFromImagesDirectory(Constants.BannersDirectory);
             if (!banners.Any())
