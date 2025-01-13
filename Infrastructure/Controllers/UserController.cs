@@ -24,7 +24,7 @@ namespace Infrastructure.Controllers
             _orderMappingService = orderMappingService;
         }
         
-        public async Task<IActionResult> UserDetails()
+        public async Task<IActionResult> Index()
         {
             var userIdClaim = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
             

@@ -105,7 +105,7 @@
                         {
                             <span class="me-2">Welcome, @User.Identity.Name!</span> <!-- Hiển thị tên người dùng -->
 
-                            <a asp-action="UserDetails" asp-controller="User" class="btn btn-user me-2" id="userButton">
+                            <a asp-action="Index" asp-controller="User" class="btn btn-user me-2" id="userButton">
                                 <i class="fas fa-user"></i> User
                             </a>
 
@@ -215,8 +215,6 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/scroll_to_top.js"></script>
-  @*   <script src="~/js/custom_toolTip.js"></script> *@
-
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

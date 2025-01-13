@@ -114,6 +114,7 @@ namespace Infrastructure
             services.AddTransient<BookMappingService>();
             services.AddTransient<ImageService>();
             services.AddTransient<FeedbackMappingService>();
+            services.AddTransient<OrderMappingService>();
 
             services.AddTransient<IVNPay, VNPayImpl>();
         }

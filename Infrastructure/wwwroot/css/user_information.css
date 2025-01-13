@@ -1,0 +1,88 @@
+﻿/* General card styling */
+.card {
+    border-radius: 20px; /* Rounded corners */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Gradient background for the card header */
+.bg-gradient-primary {
+    background: linear-gradient(45deg, #4e73df, #224abe);
+}
+
+/* Styling the user information header */
+.card-header {
+    padding: 1.2rem;
+    border-radius: 20px 20px 0 0;
+}
+
+/* Styling for the accordion button */
+.accordion-button {
+    background-color: #f8f9fa;
+    border: none;
+    font-size: 1.1rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    co color: #6c757d; /* Lighter text color */
+}
+
+    .accordion-button strong {
+        font-weight: normal; /* Lighter font weight for the label */
+        color: #6c757d; /* Lighter color for the label */
+    }
+
+    /* Hover effect for accordion button */
+    .accordion-button:hover {
+        background-color: #e2e6ea;
+        color: #4e73df;
+    }
+
+    /* For the collapsed accordion button when the text is less prominent */
+    .accordion-button.collapsed {
+        font-weight: 500;
+        color: #6c757d;
+    }
+
+/* Badge for Payment Status */
+.badge {
+    text-transform: capitalize;
+    font-size: 0.9rem;
+}
+
+/* Hover effects for items in order history */
+.card-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #4e73df;
+}
+
+/* Spacing for User Profile and Order History */
+h2, h3 {
+    font-family: 'Arial', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+/* Styling the "No orders" message */
+.text-muted {
+    font-style: italic;
+}
+
+/* Gradient Background for Card Header */
+.card-header.bg-gradient-primary {
+    background: linear-gradient(45deg, #4e73df, #224abe);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Making it responsive */
+@media (max-width: 768px) {
+    .card-header h4 {
+        font-size: 1.2rem;
+    }
+
+    .accordion-body {
+        font-size: 0.9rem;
+    }
+}
+
+
