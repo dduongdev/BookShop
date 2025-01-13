@@ -100,12 +100,12 @@
                     </a>
 
                     <!-- Login/Register -->
-                    <div class="d-flex auth-links">
+                    <div class="d-flex auth-links align-items-center">
                         @if (User?.Identity?.IsAuthenticated ?? false) // Kiểm tra xem người dùng đã đăng nhập chưa
                         {
-                            <span class="me-3">Welcome, @User.Identity.Name!</span> <!-- Hiển thị tên người dùng -->
+                            <span class="me-2">Welcome, @User.Identity.Name!</span> <!-- Hiển thị tên người dùng -->
 
-                            <a href="/Account/Profile" class="btn btn-user me-2" id="userButton">
+                            <a asp-action="Index" asp-controller="User" class="btn btn-user me-2" id="userButton">
                                 <i class="fas fa-user"></i> User
                             </a>
 
@@ -118,11 +118,12 @@
                             <a asp-action="Login" asp-controller="Authentication" class="btn btn-login me-2" id="loginButton">
                                 <i class="fas fa-sign-in-alt"></i> Login
                             </a>
-                            <a asp-action="Signup" asp-controller="Authentication" class="btn btn-register" id="registerButton">
+                            <a asp-action="Signup" asp-controller="Authentication" class="btn btn-register me-2" id="registerButton">
                                 <i class="fas fa-user-plus"></i> Signup
                             </a>
                         }
                     </div>
+
                 </div>
             </div>
         </nav>
@@ -214,8 +215,6 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/scroll_to_top.js"></script>
-  @*   <script src="~/js/custom_toolTip.js"></script> *@
-
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
