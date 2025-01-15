@@ -18,47 +18,32 @@ namespace Infrastructure.Controllers
             _bookManager = bookManager;
         }
 
-        // Hiển thị giỏ hàng
-        //public async Task<IActionResult> Index()
-        //{
-        //    var userId = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
-        //    if (userId == null)
-        //    {
-        //        return BadRequest("User not found.");
-        //    }
-
-        //    var cartItems = await _cartItemManager.GetByUserIdAsync(int.Parse(userId));
-
-        //    var books = await _bookManager.GetAllAsync();
-        //    var bookLookup = books.ToDictionary(_ => _.Id);
-
-        //    // Lấy thông tin sách từ CartItem, bao gồm trạng thái và thông báo nếu Suspended
-        //    var cartItemDetails = cartItems.Select(item => new
-        //    {
-        //        BookId = item.BookId,
-        //        BookTitle = bookLookup[item.BookId].Title,
-        //        BookPrice = bookLookup[item.BookId].Price,
-        //        IsSuspended = bookLookup[item.BookId].Status == EntityStatus.Suspended,
-        //        SuspendedMessage = bookLookup[item.BookId].Status == EntityStatus.Suspended ? "Sản phẩm hiện đang bị tạm ngưng và không thể mua." : null
-        //    });
-
-        //    return View(cartItemDetails);
-        //}
-
-        public IActionResult Index()
+        //Hiển thị giỏ hàng
+        public async Task<IActionResult> Index()
         {
-            // Dữ liệu mô phỏng sản phẩm trong giỏ hàng
-            var cartItems = new List<dynamic>
-             {
-                 new { BookId = 1, BookTitle = "C# Programming", BookPrice = 174000.99m, IsSuspended = false, SuspendedMessage = (string?)null },
-                 new { BookId = 2, BookTitle = "ASP.NET Core MVC", BookPrice = 200000m, IsSuspended = true, SuspendedMessage = "Sản phẩm hiện đang bị tạm ngưng và không thể mua." },
-                 new { BookId = 3, BookTitle = "Learn Entity Framework", BookPrice = 249000.99m, IsSuspended = false, SuspendedMessage = (string?)null },
-                 new { BookId = 4, BookTitle = "Mastering LINQ", BookPrice = 180000m, IsSuspended = true, SuspendedMessage = "Sản phẩm hiện đang bị tạm ngưng và không thể mua." }
-             };
+            var userId = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return BadRequest("User not found.");
+            }
 
-            return View(cartItems);  // Truyền dữ liệu vào view
+            var cartItems = await _cartItemManager.GetByUserIdAsync(int.Parse(userId));
+
+            var books = await _bookManager.GetAllAsync();
+            var bookLookup = books.ToDictionary(_ => _.Id);
+
+            // Lấy thông tin sách từ CartItem, bao gồm trạng thái và thông báo nếu Suspended
+            var cartItemDetails = cartItems.Select(item => new
+            {
+                BookId = item.BookId,
+                BookTitle = bookLookup[item.BookId].Title,
+                BookPrice = bookLookup[item.BookId].Price,
+                IsSuspended = bookLookup[item.BookId].Status == EntityStatus.Suspended,
+                SuspendedMessage = bookLookup[item.BookId].Status == EntityStatus.Suspended ? "Sản phẩm hiện đang bị tạm ngưng và không thể mua." : null
+            });
+
+            return View(cartItemDetails);
         }
-
 
 
 

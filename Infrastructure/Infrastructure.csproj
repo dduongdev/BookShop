@@ -26,6 +26,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\Admin\Pages\Books\" />
+    <Folder Include="Areas\Admin\Pages\Categories\" />
+    <Folder Include="Areas\Admin\Pages\Publishers\" />
     <Folder Include="wwwroot\images\banners\" />
     <Folder Include="wwwroot\images\test\" />
   </ItemGroup>

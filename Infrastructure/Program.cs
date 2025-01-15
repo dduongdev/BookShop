@@ -58,6 +58,7 @@ namespace Infrastructure
                 app.UseHsts();
             }
 
+
             // Các bước cấu hình HTTPS
             app.UseHttpsRedirection();
             app.UseRouting();
