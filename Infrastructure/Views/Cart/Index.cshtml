@@ -41,13 +41,10 @@
                                     }
                                 </td>
                                 <td class="text-center">
-                                    @if (!item.IsSuspended)
-                                    {
-                                        <form asp-action="DeleteItemAsync" method="post" class="d-inline">
-                                            <input type="hidden" name="bookId" value="@item.BookId" />
-                                            <button type="submit" class="btn btn-danger btn-sm">Xóa khỏi giỏ</button>
-                                        </form>
-                                    }
+                                    <form asp-action="DeleteItemAsync" method="post" class="d-inline">
+                                        <input type="hidden" name="bookId" value="@item.BookId" />
+                                        <button type="submit" class="btn btn-danger btn-sm">Xóa khỏi giỏ</button>
+                                    </form>
                                 </td>
                             </tr>
                         }

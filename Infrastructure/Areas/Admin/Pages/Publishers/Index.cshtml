@@ -1,0 +1,35 @@
+﻿@page
+@model Areas.Admin.Pages.Publishers.IndexModel
+@{
+    ViewData["Title"] = "Publishers";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Created At</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var publisher in Model.Publishers)
+        {
+            <tr>
+                <td>@publisher.Name</td>
+                <td>@publisher.Status</td>
+                <td>@publisher.CreatedAt</td>
+                <td>
+                    <a href="@Url.Page("Edit", new { id = publisher.Id })" class="btn btn-primary">Edit</a>
+                    <a href="@Url.Page("Suspend", new { id = publisher.Id })" class="btn btn-warning">Suspend</a>
+                    <a href="@Url.Page("Activate", new { id = publisher.Id })" class="btn btn-success">Activate</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="@Url.Page("Create")" class="btn btn-success">Add New Publisher</a>

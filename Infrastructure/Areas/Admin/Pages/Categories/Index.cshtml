@@ -1,0 +1,42 @@
+﻿@page
+@model Areas.Admin.Pages.Categories.IndexModel
+@{
+    ViewData["Title"] = "Category Management";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var category in Model.Categories)
+        {
+            <tr>
+                <td>@category.Name</td>
+                <td>@category.Status</td>
+                <td>
+                    @if (category.Status == Entities.Enums.EntityStatus.Active)
+                    {
+                        <form method="post" asp-page-handler="Suspend" asp-route-id="@category.Id" style="display:inline;">
+                            <button type="submit" class="btn btn-warning">Suspend</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form method="post" asp-page-handler="Activate" asp-route-id="@category.Id" style="display:inline;">
+                            <button type="submit" class="btn btn-success">Activate</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="@Url.Page("/Categories/Create")" class="btn btn-primary">Create New Category</a>

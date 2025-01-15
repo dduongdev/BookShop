@@ -1,0 +1,41 @@
+﻿@page
+@model Areas.Admin.Pages.Books.IndexModel
+@{
+    ViewData["Title"] = "Books List";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<!-- Bảng danh sách sách -->
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model.Books)
+        {
+            <tr>
+                <td>@book.Id</td>
+                <td>@book.Title</td>
+                <td>@book.Author</td>
+                <td>@book.Status</td>
+                <td>
+                    <a href="@Url.Page("/Books/Edit", new { id = book.Id })" class="btn btn-primary">Edit</a>
+                    <a href="@Url.Page("/Books/Details", new { id = book.Id })" class="btn btn-info">Details</a>
+                    <form method="post" action="@Url.Page("/Books/Suspend", new { id = book.Id })" style="display:inline;">
+                        <button type="submit" class="btn btn-warning">Suspend</button>
+                    </form>
+                    <form method="post" action="@Url.Page("/Books/Activate", new { id = book.Id })" style="display:inline;">
+                        <button type="submit" class="btn btn-success">Activate</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
