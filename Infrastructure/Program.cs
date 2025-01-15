@@ -11,8 +11,9 @@ using UseCases.UnitOfWork;
 using Infrastructure.Services;
 using VNPay;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using NuGet.Packaging.Signing;
-
+using dotenv.net;
 namespace Infrastructure
 {
     public class Program
@@ -21,13 +22,35 @@ namespace Infrastructure
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+            DotEnv.Load();
+
+            var clientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID");
+            var clientSecret = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET");
+
+            // Add services to the container.
+            builder.Services.AddAuthentication();
+
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            })
+            .AddCookie(options =>
             {
                 options.LoginPath = "/Authentication/Login";
                 options.AccessDeniedPath = "/Authentication/AccessDenied";
                 options.ExpireTimeSpan = TimeSpan.FromDays(7);
                 options.SlidingExpiration = true;
+            })
+
+            .AddGoogle(options =>
+            {
+                options.ClientId = clientId ?? throw new Exception("Google CLientId is missing in appSetting.json");
+                options.ClientSecret = clientSecret ?? throw new Exception("Google CLientSecret is missing in appSetting.json");
             });
+
 
             RegisterInfrastructureServices(builder.Configuration, builder.Services);
 
@@ -114,6 +137,7 @@ namespace Infrastructure
             services.AddTransient<BookMappingService>();
             services.AddTransient<ImageService>();
             services.AddTransient<FeedbackMappingService>();
+            services.AddTransient<OrderMappingService>();
 
             services.AddTransient<IVNPay, VNPayImpl>();
         }

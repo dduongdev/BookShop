@@ -1,8 +1,15 @@
-﻿/* Header Styles */
+﻿
+/* Header Styles */
 header {
     background: linear-gradient(90deg, #81d4fa, #c8e6c9); /* Xanh dương nhạt và xanh lá nhẹ, dễ chịu */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Bóng đổ nhẹ */
     transition: background 0.3s ease;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between; /* Căn chỉnh giữa các mục */
+    align-items: center; /* Căn chỉnh theo chiều dọc */
 }
 
 .navbar-brand {
@@ -12,31 +19,40 @@ header {
     text-transform: uppercase;
 }
 
-.navbar-nav .nav-link {
-    color: #1e3c58 !important; /* Màu xanh biển tối */
-    font-size: 1.1rem;
-    margin: 0 0.8rem;
-    transition: color 0.3s ease, transform 0.3s ease;
+.navbar-nav {
     display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 1px;
+    justify-content: center;
+    flex-grow: 1; /* Để phần này có thể giãn ra */
+    margin-left: 1rem;
 }
 
-    .navbar-nav .nav-link i {
-        margin-right: 8px;
+    .navbar-nav .nav-item {
+        margin: 0 0.8rem;
     }
 
-    .navbar-nav .nav-link:hover {
-        color: #0288d1 !important; /* Màu xanh dương sáng khi hover */
-        transform: translateY(-3px);
+    .navbar-nav .nav-link {
+        color: #1e3c58 !important; /* Màu xanh biển tối */
+        font-size: 1.1rem;
+        transition: color 0.3s ease, transform 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 1px;
     }
 
-/* Dropdown Styles */
-.navbar-nav .dropdown:hover .dropdown-menu {
-    display: block;
-    animation: fadeIn 0.3s ease-in-out;
-}
+        .navbar-nav .nav-link i {
+            margin-right: 8px;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #0288d1 !important; /* Màu xanh dương sáng khi hover */
+            transform: translateY(-3px);
+        }
+
+    /* Dropdown Styles */
+    .navbar-nav .dropdown:hover .dropdown-menu {
+        display: block;
+        animation: fadeIn 0.3s ease-in-out;
+    }
 
 .dropdown-menu {
     background-color: #ffffff; /* Màu nền trắng tinh tế cho dropdown */
@@ -55,19 +71,24 @@ header {
     }
 
 /* Auth Buttons */
-.auth-links .nav-link {
-    background: linear-gradient(90deg, #ff7043, #ffab91); /* Đỏ cam nhẹ và hồng nhạt */
-    color: #ffffff !important;
-    font-size: 1rem;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    transition: background 0.3s ease, transform 0.2s ease;
+.auth-links {
+    display: flex;
+    align-items: center;
 }
 
-    .auth-links .nav-link:hover {
-        background: linear-gradient(90deg, #ffab91, #ff7043);
-        transform: scale(1.1);
+    .auth-links .nav-link {
+        background: linear-gradient(90deg, #ff7043, #ffab91); /* Đỏ cam nhẹ và hồng nhạt */
+        color: #ffffff !important;
+        font-size: 1rem;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        transition: background 0.3s ease, transform 0.2s ease;
     }
+
+        .auth-links .nav-link:hover {
+            background: linear-gradient(90deg, #ffab91, #ff7043);
+            transform: scale(1.1);
+        }
 
 /* Keyframes for dropdown fade-in */
 @keyframes fadeIn {
@@ -82,8 +103,7 @@ header {
     }
 }
 
-/*CatgoryDropdown*/
-/* Dropdown menu với hiệu ứng gradient */
+/* Category Dropdown */
 .dropdown-enhanced {
     background: linear-gradient(135deg, #f5f5f5, #e0f7fa);
     border-radius: 8px;
@@ -125,4 +145,37 @@ header {
 
 .nav-item.dropdown .nav-link[aria-expanded="true"] .rotate-icon {
     transform: rotate(180deg);
+}
+
+/* Các phần tử search, cart, auth phải được căn chỉnh hợp lý */
+.d-flex {
+    display: flex;
+    align-items: center;
+}
+
+#searchForm {
+    display: flex;
+    align-items: center;
+    margin-right: 1rem;
+}
+
+#searchQuery {
+    border-radius: 20px;
+}
+
+#cart-icon {
+    position: relative;
+    margin-right: 1rem;
+}
+
+#cart-count {
+    position: absolute;
+    top: 0;
+    start: 100%;
+    transform: translate(-50%, -50%);
+}
+
+.auth-links {
+    display: flex;
+    gap: 1rem;
 }

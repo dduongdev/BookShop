@@ -63,5 +63,14 @@ namespace UseCases
                 await _userRepository.UpdateAsync(foundUser);
             }
         }
+        public async Task<User?> FindByEmailAsync(string email)
+        {
+            var storedUsers = await _userRepository.GetAllAsync();
+
+            var foundUser = storedUsers.FirstOrDefault(user => user.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+
+            return foundUser;
+        }
+
     }
 }

@@ -1,11 +1,16 @@
 ﻿using Entities;
+using Entities.Enums;
 using Infrastructure.Models.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using UseCases;
+using UseCases.Repositories;
+using UseCases.TaskResults;
 
 namespace Infrastructure.Controllers
 {
@@ -13,9 +18,12 @@ namespace Infrastructure.Controllers
     {
         private readonly AuthenticationManager _authenticationManager;
 
-        public AuthenticationController(AuthenticationManager authenticationManager)
+        private readonly UserManager _userManager;
+
+        public AuthenticationController(AuthenticationManager authenticationManager, UserManager userManager)
         {
             _authenticationManager = authenticationManager;
+            _userManager = userManager;
         }
 
         public IActionResult Login()
@@ -63,6 +71,72 @@ namespace Infrastructure.Controllers
                 ModelState.AddModelError("Login failed", loginResult.Message);
                 return View();
             }
+        }
+
+        public async Task LoginByGoogle()
+        {
+            await HttpContext.ChallengeAsync(GoogleDefaults.AuthenticationScheme,
+                new AuthenticationProperties
+                {
+                    RedirectUri = Url.Action("GoogleResponse", "Authentication")
+                });
+        }
+
+        public async Task<IActionResult> GoogleResponse()
+        {
+            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+
+            if (!result.Succeeded || result.Principal == null)
+            {
+                TempData["error"] = "Google authentication failed";
+                return RedirectToAction("Login");
+            }
+
+
+            var emailClaim = result.Principal.FindFirst(ClaimTypes.Email);
+            if (emailClaim == null)
+            {
+                TempData["error"] = "Unable to retrieve email from Google account.";
+                return RedirectToAction("Login");
+            }
+
+            var email = emailClaim.Value;
+            var username = email.Split('@')[0];
+
+            var existingUser = await _userManager.FindByEmailAsync(email);
+            if (existingUser == null)
+            {
+                var passwordHasher = new PasswordHasher<User>();
+                var hashedPassword = passwordHasher.HashPassword(null, Guid.NewGuid().ToString());
+                var newUser = new User
+                {
+                    Email = email,
+                    Username = username,
+                    Password = hashedPassword,
+                    Phone = "xxx-xxx-xxxx",
+                    Role = Entities.Enums.UserRole.Customer 
+                };
+
+                await _userManager.AddAsync(newUser);
+                existingUser = newUser; 
+            }
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, existingUser.Id.ToString()),
+                new Claim(ClaimTypes.Name, existingUser.Username),
+                new Claim(ClaimTypes.Email, existingUser.Email),
+                new Claim(ClaimTypes.Role, existingUser.Role.ToString())
+            };
+
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+            TempData["success"] = "Login successful";
+            return RedirectToAction("Index", "Home");
         }
 
         public IActionResult Signup()
