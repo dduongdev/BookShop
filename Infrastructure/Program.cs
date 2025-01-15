@@ -135,6 +135,7 @@ namespace Infrastructure
             services.AddTransient<BookMappingService>();
             services.AddTransient<ImageService>();
             services.AddTransient<FeedbackMappingService>();
+            services.AddTransient<OrderMappingService>();
 
             // Đăng ký dịch vụ VNPay
             services.AddTransient<IVNPay, VNPayImpl>();
