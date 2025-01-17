@@ -1,0 +1,19 @@
+﻿@page
+@model Infrastructure.Areas.Admin.Pages.Categories.EditModel
+@{
+    ViewData["Title"] = "Edit Category";
+}
+
+<h2>Chỉnh sửa danh mục</h2>
+
+<form method="post">
+    <div class="form-group">
+        <label for="Name">Tên danh mục: </label>
+        <input type="text" id="Name" name="Name" class="form-control" value="@Model.Category.Name" required />
+    </div>
+
+
+    <button type="submit" class="btn btn-primary mt-3">Lưu thay đổi</button>
+</form>
+
+<a href="@Url.Page("./Index")" class="btn btn-secondary mt-3">Trở lại danh sách danh mục</a>

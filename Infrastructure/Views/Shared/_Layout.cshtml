@@ -37,18 +37,10 @@
             <!-- Navbar Links -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <!-- Home -->
-                    <li class="nav-item">
-                        <a class="nav-link active" asp-area="" asp-controller="Home" asp-action="Index">
-                            <i class="fas fa-home"></i> Home
-                        </a>
-                    </li>
-
                     <!-- Categories Dropdown -->
-
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="categoriesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-th rotate-icon"></i> Categories
+                            <i class="fas fa-th rotate-icon"></i> Danh mục
                         </a>
                         <ul class="dropdown-menu dropdown-enhanced animate__animated animate__fadeInDown" aria-labelledby="categoriesDropdown">
                             <li><a class="dropdown-item enhanced-item" href="#"><i class="fas fa-book"></i> Văn Học</a></li>
@@ -64,15 +56,15 @@
 
                     <!-- Privacy -->
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">
-                            <i class="fas fa-user-shield"></i> Privacy
+                        <a class="nav-link" asp-area="" asp-controller="Book" asp-action="Index">
+                            <i class="fas fa-book"></i> Sản phẩm
                         </a>
                     </li>
 
                     <!-- Contact -->
                     <li class="nav-item">
                         <a class="nav-link" href="#">
-                            <i class="fas fa-envelope"></i> Contact
+                            <i class="fas fa-envelope"></i> Liên hệ
                         </a>
                     </li>
                 </ul>
@@ -81,9 +73,9 @@
                 <!-- Search, Cart, and Auth -->
                 <div class="d-flex ms-lg-3 align-items-center">
                     <!-- Search -->
-                    <form class="d-flex me-3" id="searchForm">
+                    <form method="get" class="d-flex me-3" id="searchForm" asp-controller="Book" asp-action="Index">
                         <div class="input-group">
-                            <input type="search" class="form-control search-input" id="searchQuery" placeholder="Search books..." aria-label="Search">
+                            <input type="search" class="form-control search-input" name="titleSearchKeyword" id="searchQuery" placeholder="Tìm kiếm..." aria-label="Search">
                             <button class="btn btn-search" type="submit" id="searchBtn">
                                 <i class="fas fa-search"></i>
                             </button>
@@ -92,34 +84,39 @@
 
 
                     <!-- Cart -->
-                    <a href="#" class="btn btn-cart me-3 position-relative" id="cart-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="View Cart">
+                    <a href="/cart" class="btn btn-cart me-3 position-relative" id="cart-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="View Cart">
                         <i class="fas fa-shopping-cart fa-lg"></i>
-                        <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            3
-                        </span>
                     </a>
+
 
                     <!-- Login/Register -->
                     <div class="d-flex auth-links align-items-center">
                         @if (User?.Identity?.IsAuthenticated ?? false) // Kiểm tra xem người dùng đã đăng nhập chưa
                         {
-                            <span class="me-2">Welcome, @User.Identity.Name!</span> <!-- Hiển thị tên người dùng -->
+                            <span class="me-2" style="    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    overflow: hidden;
+    width: 140px;">Welcome, @User.Identity.Name!</span> <!-- Hiển thị tên người dùng -->
 
                             <a asp-action="Index" asp-controller="User" class="btn btn-user me-2" id="userButton">
                                 <i class="fas fa-user"></i> User
                             </a>
 
                             <a asp-action="Logout" asp-controller="Authentication" class="btn btn-logout me-2" id="logoutButton">
-                                <i class="fas fa-sign-out-alt"></i> Logout
+                                <i class="fas fa-sign-out-alt"></i> Đăng xuất
                             </a>
                         }
                         else
                         {
                             <a asp-action="Login" asp-controller="Authentication" class="btn btn-login me-2" id="loginButton">
-                                <i class="fas fa-sign-in-alt"></i> Login
+                                <i class="fas fa-sign-in-alt"></i> Đăng nhập
                             </a>
                             <a asp-action="Signup" asp-controller="Authentication" class="btn btn-register me-2" id="registerButton">
-                                <i class="fas fa-user-plus"></i> Signup
+                                <i class="fas fa-user-plus"></i> Đăng ký
                             </a>
                         }
                     </div>

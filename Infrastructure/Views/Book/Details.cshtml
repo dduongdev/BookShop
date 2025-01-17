@@ -42,7 +42,7 @@
                 <div class="card-header">
                     <h3>@Model.Title</h3>
                     <div style="display: flex; align-items: center; column-gap: 10px;">
-                        <span><strong>@averageRating</strong></span>
+                        <span><strong>@averageRating.ToString("F1")</strong></span>
                         <div>
                             @{
                                 await Html.RenderPartialAsync("_StarRating", averageRating);
@@ -68,10 +68,10 @@
                     <p><strong>Tác giả:</strong> @Model.Author</p>
 
                     <p><strong>Nhà xuất bản:</strong> @Model.PublisherName</p>
-
+					<a href="c:\users\asus\downloads\bookshop\infrastructure\views\book\details.cshtml">c:\users\asus\downloads\bookshop\infrastructure\views\book\details.cshtml</a>
                     <p><strong>Danh mục:</strong> @Model.CategoryName</p>
 
-                    <p><strong>Mô tả:</strong> @Model.Description</p>
+                    <p><strong>Mô tả:</strong> @Html.Raw(Model.Description)</p>
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -106,10 +106,14 @@
                             <span class="badge bg-danger fs-5 py-2 px-3">Hết hàng</span>
                         }
                     </p>
-
                     <div class="d-flex gap-2">
-                        <form style="flex: 1;">
-                            <button class="btn btn-dark flex-grow-1" style="width: 100%;" @(Model.Status != Entities.Enums.EntityStatus.Active ? "disabled" : "")>Thêm vào giỏ hàng</button>
+                        <!-- Trong View -->
+                        <form style="flex: 1;" asp-controller="Cart" asp-action="Add" method="post">
+                            <input asp-for="@Model.Id" name="bookId" hidden />
+                            <button class="btn btn-dark flex-grow-1" style="width: 100%;"
+                            @(Model.Status != Entities.Enums.EntityStatus.Active ? "disabled" : "")>
+                                Thêm vào giỏ hàng
+                            </button>
                         </form>
                         <form asp-controller="Order" asp-action="Confirm" style="flex: 1;">
                             <input asp-for="@Model.Id" name="orderedBookIds" hidden />

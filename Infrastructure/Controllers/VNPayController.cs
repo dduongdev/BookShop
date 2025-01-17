@@ -135,7 +135,7 @@ namespace Infrastructure.Controllers
 
                     if (paymentResult.IsSuccess)
                     {
-                        return Ok("Thanh toán thành công.");
+                        return RedirectToAction("Index", "User");
                     }
 
                     return BadRequest(resultDescription);

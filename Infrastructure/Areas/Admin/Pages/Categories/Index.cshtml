@@ -1,0 +1,49 @@
+﻿@page
+@model Infrastructure.Areas.Admin.Pages.Categories.IndexModel
+@{
+    
+}
+
+<h1 class="text-center mb-4">Danh sách danh mục</h1>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<a asp-page="./Create" class="btn btn-success mb-3">Tạo danh mục</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th style="width: 33.3%;">Tên</th>
+            <th style="width: 33.3%;">Trạng thái</th>
+            <th style="width: 33.3%;">Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var category in Model.Categories)
+        {
+            <tr>
+                <td>@category.Name</td>
+                <td>@category.Status</td>
+                <td>
+                    <a href="@Url.Page("./Edit", new { id = category.Id })" class="btn btn-primary">Chỉnh sửa</a>
+                    @if (category.Status == Entities.Enums.EntityStatus.Active)
+                    {
+                        <form method="post" asp-page-handler="Suspend" asp-route-id="@category.Id" class="d-inline">
+                            <button type="submit" class="btn btn-warning">Đình chỉ</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form method="post" asp-page-handler="Activate" asp-route-id="@category.Id" class="d-inline">
+                            <button type="submit" class="btn btn-success">Kích hoạt</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

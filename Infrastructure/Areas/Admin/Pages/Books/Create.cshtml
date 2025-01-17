@@ -1,0 +1,82 @@
+﻿@page
+@model Infrastructure.Areas.Admin.Books.CreateModel
+@{
+    ViewData["Title"] = "Add New Book";
+}
+<link href="~/css/admin-create.css" rel="stylesheet" />
+
+<h1 class="mb-4 text-center text-primary">Thêm sách mới</h1>
+
+<form method="post" class="shadow p-4 rounded bg-light" enctype="multipart/form-data">
+    <div class="container">
+        <div class="row mb-3">
+            <!-- Title Input -->
+            <div class="col-md-6">
+                <label for="Book_Title" class="form-label">Tên sách</label>
+                <input asp-for="Book.Title" class="form-control" id="Book_Title" placeholder="Nhập tên sách" required />
+            </div>
+
+            <!-- Author Input -->
+            <div class="col-md-6">
+                <label for="Book_Author" class="form-label">Tác giả</label>
+                <input asp-for="Book.Author" class="form-control" id="Book_Author" placeholder="Nhập tác giả" required />
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <!-- Price Input -->
+            <div class="col-md-6">
+                <label for="Book_Price" class="form-label">Giá sản phẩm</label>
+                <input asp-for="Book.Price" class="form-control" id="Book_Price" placeholder="Nhập sản phẩm" required />
+            </div>
+
+            <!-- Stock Input -->
+            <div class="col-md-6">
+                <label for="Book_Stock" class="form-label">Số lượng</label>
+                <input asp-for="Book.Stock" class="form-control" id="Book_Stock" placeholder="Nhập số lượng" required />
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <!-- Description Input -->
+            <div class="col-md-12">
+                <label for="Book_Description" class="form-label">Mô tả</label>
+                <textarea asp-for="Book.Description" class="form-control" id="Book_Description" rows="4" placeholder="Nhập mô tả" required></textarea>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <!-- Discount Percentage Input -->
+            <div class="col-md-6">
+                <label for="Book_DiscountPercentage" class="form-label">Phần trăm giảm giá</label>
+                <input asp-for="Book.DiscountPercentage" class="form-control" id="Book_DiscountPercentage" placeholder="Nhập phần trăm giảm giá" />
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <!-- Category Dropdown -->
+            <div class="col-md-6">
+                <label for="Book_CategoryId" class="form-label">Danh mục</label>
+                <select asp-for="Book.CategoryId" asp-items="ViewBag.Categories" class="form-select" id="Book_CategoryId" required>
+                    <option value="">Select Category</option>
+                </select>
+            </div>
+
+            <!-- Publisher Dropdown -->
+            <div class="col-md-6">
+                <label for="Book_PublisherId" class="form-label">Nhà xuất bản</label>
+                <select asp-for="Book.PublisherId" asp-items="ViewBag.Publishers" class="form-select" id="Book_PublisherId" required>
+                    <option value="">Select Publisher</option>
+                </select>
+            </div>
+        </div>
+
+        <div>
+            <input type="file" asp-for="BookImages" multiple />
+        </div>
+
+        <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary btn-lg">Lưu</button>
+        </div>
+    </div>
+</form>

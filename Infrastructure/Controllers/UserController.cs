@@ -6,9 +6,11 @@ using UseCases;
 using Entities;
 using Infrastructure.Services;
 using Infrastructure.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Infrastructure.Controllers
 {
+    [Authorize]
     public class UserController : Controller
     {
         private readonly UserManager _userManager;
@@ -47,10 +49,10 @@ namespace Infrastructure.Controllers
 
             //Get orders
             var orders = await _orderManager.GetByIdAsync(userId);
-            if(orders == null)
-            {
-                return NotFound("No Orders");
-            }
+            //if(orders == null)
+            //{
+            //    return NotFound("No Orders");
+            //}
 
             var ordersList = await _orderManager.GetAllAsync();
             var userOrders = ordersList.Where(o => o.UserId == userId).ToList();
