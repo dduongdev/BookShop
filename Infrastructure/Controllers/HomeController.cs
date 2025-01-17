@@ -34,10 +34,10 @@ namespace Infrastructure.Controllers
             }
 
             var activeBooks = await _bookManager.GetAllActivateAsync();
-            RequestScopedPaginationService<Book> paginationService = new RequestScopedPaginationService<Book>(activeBooks, 12);
+            PaginationService<Book> paginationService = new PaginationService<Book>(activeBooks, 12);
             IEnumerable<Book> paginatedActiveBooks = paginationService.GetItemsByPage(pageIndex);
 
-            IEnumerable<BookCardVM> bookCardVMs = await _bookMappingService.MapToBookCardVMs(activeBooks);
+            IEnumerable<BookCardVM> bookCardVMs = await _bookMappingService.MapToBookCardVMs(paginatedActiveBooks);
 
             IEnumerable<string> banners = _imageService.GetAllFromImagesDirectory(Constants.BannersDirectory);
             if (!banners.Any())

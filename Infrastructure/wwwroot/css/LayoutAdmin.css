@@ -1,0 +1,55 @@
+﻿/* Cải tiến sidebar */
+.sidebar {
+    background-color: #343a40;
+    color: white;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    transition: all 0.3s ease;
+}
+
+    .sidebar .nav-link {
+        color: #ddd;
+        padding: 15px 20px;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+        .sidebar .nav-link.active, .sidebar .nav-link:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+    .sidebar .nav-item .nav-link span {
+        margin-right: 10px;
+    }
+
+    .sidebar .nav-link.active span, .sidebar .nav-link:hover span {
+        color: #fff;
+    }
+
+    .sidebar .nav-link.active {
+        background-color: #0069d9;
+    }
+
+    /* Hover effect for menu items */
+    .sidebar .nav-link:hover {
+        background-color: #0069d9;
+        color: white;
+    }
+
+    .sidebar .nav-item {
+        border-bottom: 1px solid #474e56;
+    }
+
+    .sidebar .nav-link.active {
+        background-color: #0056b3;
+    }
+
+/* Style for the main content */
+.main-content {
+    margin-left: 250px;
+    padding: 20px;
+}

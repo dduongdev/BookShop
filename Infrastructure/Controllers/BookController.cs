@@ -47,7 +47,7 @@ namespace Infrastructure.Controllers
 
             activeBooks = _bookProcessingService.ApplySorting(activeBooks, sortCriteria);
 
-            RequestScopedPaginationService<Book> paginationService = new RequestScopedPaginationService<Book>(activeBooks, 12);
+            PaginationService<Book> paginationService = new PaginationService<Book>(activeBooks, 12);
             IEnumerable<Book> paginatedActivateBooks = paginationService.GetItemsByPage(pageIndex);
 
             ViewBag.PaginationMetadata = paginationService.GetPaginationMetadata();

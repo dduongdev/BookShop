@@ -21,12 +21,20 @@ namespace Infrastructure
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            var clientId = builder.Configuration["GoogleKeys:ClientId"];
+            var clientSecret = builder.Configuration["GoogleKeys:ClientSecret"];
+
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
             {
                 options.LoginPath = "/Authentication/Login";
                 options.AccessDeniedPath = "/Authentication/AccessDenied";
                 options.ExpireTimeSpan = TimeSpan.FromDays(7);
                 options.SlidingExpiration = true;
+            })
+            .AddGoogle(options =>
+            {
+                options.ClientId = clientId ?? throw new Exception("Google CLientId is missing in appSetting.json");
+                options.ClientSecret = clientSecret ?? throw new Exception("Google CLientSecret is missing in appSetting.json");
             });
 
             RegisterInfrastructureServices(builder.Configuration, builder.Services);
@@ -42,6 +50,12 @@ namespace Infrastructure
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddRazorPages(options =>
+            {
+                options.Conventions.AddAreaPageRoute("Admin", "/Admin/Books/Index", "Admin/Books/Index");
+            });
+
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -55,6 +69,7 @@ namespace Infrastructure
             app.UseHttpsRedirection();
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapStaticAssets();
@@ -68,6 +83,7 @@ namespace Infrastructure
                 pattern: "{controller=Home}/{action=Index}/{id?}")
                 .WithStaticAssets();
 
+            app.MapRazorPages();
             app.Run();
         }
 

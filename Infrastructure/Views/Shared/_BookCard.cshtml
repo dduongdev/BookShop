@@ -5,9 +5,17 @@
         <div class="book-card__image">
             <img class="img-fluid" src="@Model.Image" alt="Book Image">
         </div>
-        <div class="book-card__details">
+        <div class="book-card__details" style="height: 260px;">
             @await Html.PartialAsync("_StarRating", Model.Rating)
-            <h5 class="book-card__title">@Model.Title</h5>
+            <h5 class="book-card__title" style="display: -webkit-box;
+                        -webkit-line-clamp: 2;
+                        -webkit-box-orient: vertical; 
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        word-wrap: break-word;
+                        overflow: hidden;">
+                @Model.Title
+            </h5>
             <p class="book-card__author"><strong>Tác giả:</strong> @Model.Author</p>
             <p class="book-card__publisher"><strong>Nhà xuất bản:</strong> @Model.PublisherName</p>
 

@@ -1,0 +1,24 @@
+﻿@page
+@model Infrastructure.Areas.Admin.Pages.Categories.CreateModel
+@{
+    ViewData["Title"] = "Create New Category";
+}
+
+<h1>Tạo danh mục</h1>
+
+<form method="post">
+    <div class="form-group">
+        <label asp-for="Category.Name" class="form-label"></label>
+        <input asp-for="Category.Name" class="form-control" />
+        <span asp-validation-for="Category.Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mt-3">
+        <button type="submit" class="btn btn-primary">Tạo</button>
+        <a asp-page="Index" class="btn btn-secondary">Hủy</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
