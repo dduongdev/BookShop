@@ -8,7 +8,7 @@ namespace Entities.Enums
 {
     public enum PaymentMethod
     {
-        Online,
-        COD
+        COD,
+        VNPay
     }
 }

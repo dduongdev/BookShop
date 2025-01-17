@@ -12,8 +12,8 @@ namespace Infrastructure.Services
             {
                 booksAfterSorting = bookSortCriteria.PriceSortOrder switch
                 {
-                    PriceSortOrders.LowestToHighest => books.OrderBy(b => b.Price),
-                    PriceSortOrders.HighestToLowest => books.OrderByDescending(b => b.Price),
+                    PriceSortOrders.LowestToHighest => books.OrderByDescending(b => (b.Price * (1 - b.DiscountPercentage / 100m))),
+                    PriceSortOrders.HighestToLowest => books.OrderBy(b => (b.Price * (1 - b.DiscountPercentage / 100m))),
                     _ => books
                 };
             }

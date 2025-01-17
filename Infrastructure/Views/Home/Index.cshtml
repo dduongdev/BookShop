@@ -1,8 +1,64 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using System.Linq;
+@model IEnumerable<Infrastructure.Models.ViewModels.BookCardVM>
+
+@{
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@section Styles {
+    <link href="~/css/bookcard.css" rel="stylesheet" />
+    <link href="~/css/star_rating.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/pagination.css" asp-append-version="true" />
+}
+<div class="container mt-3">
+    <!-- Banner Section -->
+    <div class="container-fluid p-0">
+        <div id="carouselBanners" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+            <!-- 3000ms = 3 giây -->
+            <div class="carousel-inner">
+                @foreach (var banner in (List<string>)ViewBag.Banners)
+                {
+                    <div class="carousel-item @(banner == ((List<string>)ViewBag.Banners).FirstOrDefault() ? "active" : "")">
+                        <img src="@banner" class="d-block w-100" alt="Banner">
+                    </div>
+                }
+            </div>
+
+            <!-- Nút điều hướng -->
+            <button class="carousel-control-prev position-absolute top-50 start-0 translate-middle-y ms-2" type="button" data-bs-target="#carouselBanners" data-bs-slide="prev">
+                <i class="fa-solid fa-chevron-left fs-3 text-dark"></i>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next position-absolute top-50 end-0 translate-middle-y me-2" type="button" data-bs-target="#carouselBanners" data-bs-slide="next">
+                <i class="fa-solid fa-chevron-right fs-3 text-dark"></i>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Book List Title -->
+    <div class="container text-center mt-4 mb-4">
+        <h1 class="display-4">Thế giới sách</h1>
+        <p class="lead">Khám phá tủ sách của chúng tôi</p>
+    </div>
+
+    <!-- Book Cards Display Section -->
+    <div class="container">
+        <div class="row">
+            @foreach (var book in Model)
+            {
+                await Html.RenderPartialAsync("_BookCard", book);
+            }
+        </div>
+
+        @{
+            var pagination = ViewBag.PaginationMetadata as Infrastructure.Models.PaginationMetadata;
+            await Html.RenderPartialAsync("_Pagination", pagination);
+        }
+    </div>
 </div>
+
+@section Scripts{
+    <script src="~/js/toogleParameterUrl.js"></script>
+}

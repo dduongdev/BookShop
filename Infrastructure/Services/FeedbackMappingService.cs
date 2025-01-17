@@ -1,5 +1,6 @@
 ﻿using Entities;
 using Infrastructure.Models.ViewModels;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using UseCases;
 
 namespace Infrastructure.Services
@@ -13,24 +14,33 @@ namespace Infrastructure.Services
             _userManager = userManager;
         }
 
-        public async Task<FeedbackVM> MapToFeedbackVM(Feedback feedback)
+        public async Task<IEnumerable<FeedbackVM>> MapToFeedbackVMs(IEnumerable<Feedback> feedbacks)
         {
-            var feedbackVM = new FeedbackVM
-            {
-                Id = feedback.Id,
-                Comment = feedback.Comment ?? "",
-                Rating = feedback.Rating,
-                Username = "Unknown username",
-                CreatedAt = feedback.CreatedAt
-            };
+            var users = await _userManager.GetAllAsync();
+            var userLookup = users.ToDictionary(_ => _.Id);
 
-            var user = await _userManager.GetByIdAsync(feedback.UserId);
-            if (user != null)
+            var feedbackVMs = new List<FeedbackVM>();
+            foreach (var feedback in feedbacks)
             {
-                feedbackVM.Username = user.Username;
+                var feedbackVM = new FeedbackVM
+                {
+                    Id = feedback.Id,
+                    Comment = feedback.Comment ?? "",
+                    Rating = feedback.Rating,
+                    Username = "Unknown username",
+                    CreatedAt = feedback.CreatedAt
+                };
+
+                var user = userLookup[feedback.UserId];
+                if (user != null)
+                {
+                    feedbackVM.Username = user.Username;
+                }
+
+                feedbackVMs.Add(feedbackVM);
             }
-
-            return feedbackVM;
+            
+            return feedbackVMs;
         }
     }
 }

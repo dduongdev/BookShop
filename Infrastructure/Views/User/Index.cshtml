@@ -1,0 +1,89 @@
+﻿﻿@{
+    var user = ViewData["User"] as Entities.User;
+    var orders = ViewData["Orders"] as List<Infrastructure.Models.ViewModels.OrderVM>;
+}
+
+<head>
+    <link href="~/css/user_information.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Left Column: User Information -->
+            <div class="col-lg-4 col-md-5">
+                <div class="card shadow-lg border-0">
+                    <div class="card-header bg-gradient-primary text-white d-flex align-items-center">
+                        <i class="fas fa-user-circle fa-2x me-3"></i>
+                        <h4 class="mb-0">Thông tin khách hàng</h4>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Username:</strong> @user.Username</p>
+                        <p><strong>Email:</strong> @user.Email</p>
+                        <p><strong>Số điện thoại:</strong> @user.Phone</p>
+                        <p><strong>Địa chỉ:</strong> @user.Address</p>
+                        <p>
+                            <strong>Trạng thái:</strong>
+                            <span class="badge bg-success">@user.Status</span>
+                        </p>
+                        <p><strong>Tạo ngày:</strong> @user.CreatedAt</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Order History -->
+            <div class="col-lg-8 col-md-7">
+                <h2 class="text-center mb-4">Lịch sử đặt hàng</h2>
+                <div class="accordion" id="orderHistoryAccordion">
+                    @if (orders != null && orders.Any())
+                    {
+                        @foreach (var order in orders)
+                        {
+                            <div class="accordion-item mb-3">
+                                <h2 class="accordion-header" id="heading-@order.Id">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@order.Id" aria-expanded="false" aria-controls="collapse-@order.Id">
+                                        <strong>Ngày đặt hàng:</strong> @order.CreatedAt.ToString("HH:mm dd-MM-yyyy")
+                                    </button>
+                                </h2>
+                                <div id="collapse-@order.Id" class="accordion-collapse collapse" aria-labelledby="heading-@order.Id" data-bs-parent="#orderHistoryAccordion">
+                                    <div class="accordion-body">
+                                        <p><strong>Địa chỉ giao hàng:</strong> @order.DeliveryAddress</p>
+                                        <p><strong>Số điện thoại:</strong> @order.DeliveryPhone</p>
+                                        <p><strong>Phương thức thanh toán:</strong> @order.PaymentMethod</p>
+                                        <p>
+                                            <strong>Trạng thái thanh toán:</strong>
+                                            <span class="badge @(order.PaymentStatus == Entities.Enums.PaymentStatus.Paid ? "bg-success" : "bg-warning")">
+                                                @order.PaymentStatus
+                                            </span>
+                                        </p>
+                                        <hr>
+                                        <h5>Order Items</h5>
+                                        <div class="row g-3">
+                                            @foreach (var item in order.orderItemVMs)
+                                            {
+                                                <div class="col-md-6 col-lg-4">
+                                                    <div class="card border-light shadow-sm h-100">
+                                                        <div class="card-body">
+                                                            <h6 class="card-title text-primary">@item.BookTitle</h6>
+                                                            <p class="card-text">
+                                                                <strong>Số lượng:</strong> @item.Quantity
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-center text-muted">Bạn chưa có order nào!</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

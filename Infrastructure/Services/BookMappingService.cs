@@ -22,41 +22,52 @@ namespace Infrastructure.Services
             _imageService = imageService;
         }
 
-        public async Task<BookCardVM> MapToBookCardVM(Book book)
+        public async Task<IEnumerable<BookCardVM>> MapToBookCardVMs(IEnumerable<Book> books)
         {
-            var bookCardVM = new BookCardVM 
-            {
-                Id = book.Id,
-                Title = book.Title,
-                Author = book.Author ?? "Unknown author",
-                Price = book.Price,
-                DiscountPercentage = book.DiscountPercentage,
-                Stock = book.Stock,
-                Image = Constants.DefaultImagePath,
-                PublisherName = "Unknown publisher",
-                Rating = 5
-            };
+            var allPublishers = await _publisherManager.GetAllAsync();
+            var publisherLookup = allPublishers.ToDictionary(publisher => publisher.Id); 
+            var allFeedbacks = await _feedbackManager.GetAllAsync(); 
 
-            var publisher = await _publisherManager.GetByIdAsync(book.PublisherId);
-            if (publisher != null)
+            var bookCardViewModels = new List<BookCardVM>();  
+
+            foreach (var book in books)
             {
-                bookCardVM.PublisherName = publisher.Name;
+                var bookCardVM = new BookCardVM
+                {
+                    Id = book.Id,
+                    Title = book.Title,
+                    Author = book.Author ?? "Unknown author",  
+                    Price = book.Price,
+                    DiscountPercentage = book.DiscountPercentage,
+                    Stock = book.Stock,
+                    Image = Constants.DefaultImagePath,
+                    PublisherName = "Unknown publisher",  
+                    Rating = 5 
+                };
+
+                if (publisherLookup.TryGetValue(book.PublisherId, out var publisher))
+                {
+                    bookCardVM.PublisherName = publisher?.Name ?? "Unknown publisher";
+                }
+
+                if (!string.IsNullOrEmpty(book.ImagesDirectory))
+                {
+                    var images = _imageService.GetAllFromImagesDirectory(book.ImagesDirectory);
+                    bookCardVM.Image = images.FirstOrDefault() ?? Constants.DefaultImagePath;
+                }
+
+                var bookFeedbacks = allFeedbacks.Where(feedback => feedback.BookId == book.Id).ToList();
+                if (bookFeedbacks.Any())
+                {
+                    bookCardVM.Rating = (bookCardVM.Rating + bookFeedbacks.Average(feedback => feedback.Rating)) / 2;
+                }
+
+                bookCardViewModels.Add(bookCardVM);
             }
 
-            if (!string.IsNullOrEmpty(book.ImagesDirectory))
-            {
-                var images = _imageService.GetAllFromImagesDirectory(book.ImagesDirectory);
-                bookCardVM.Image = images.FirstOrDefault() ?? Constants.DefaultImagePath;
-            }
-
-            var feedbacks = await _feedbackManager.GetByBookIdAsync(book.Id);
-            if (feedbacks != null && feedbacks.Any())
-            {
-                bookCardVM.Rating = (bookCardVM.Rating + feedbacks.Average(_ => _.Rating)) / 2;
-            }
-
-            return bookCardVM;
+            return bookCardViewModels;
         }
+
 
         public async Task<BookDetailsVM> MapToBookDetailsVM(Book book)
         {

@@ -42,7 +42,7 @@
                 <div class="card-header">
                     <h3>@Model.Title</h3>
                     <div style="display: flex; align-items: center; column-gap: 10px;">
-                        <span><strong>@averageRating</strong></span>
+                        <span><strong>@averageRating.ToString("F1")</strong></span>
                         <div>
                             @{
                                 await Html.RenderPartialAsync("_StarRating", averageRating);
@@ -55,23 +55,23 @@
                     <h4 class="text-danger fw-bold">
                         @if (Model.DiscountPercentage > 0)
                         {
-                            <span>@((Model.Price * (1 - Model.DiscountPercentage / 100)).ToString("C"))</span>
-                            <span class="text-decoration-line-through text-muted ms-2">@Model.Price.ToString("C")</span>
+                            <span>@String.Format(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"), "{0:c}", Model.Price * (1 - Model.DiscountPercentage / 100))</span>
+                            <span class="text-decoration-line-through text-muted ms-2">@String.Format(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"), "{0:c}", Model.Price)</span>
                             <span class="badge bg-success ms-2">-@Model.DiscountPercentage%</span>
                         }
                         else
                         {
-                            <span>@Model.Price.ToString("C")</span>
+                            <span>@String.Format(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"), "{0:c}", Model.Price)</span>
                         }
                     </h4>
 
                     <p><strong>Tác giả:</strong> @Model.Author</p>
 
                     <p><strong>Nhà xuất bản:</strong> @Model.PublisherName</p>
-
+					<a href="c:\users\asus\downloads\bookshop\infrastructure\views\book\details.cshtml">c:\users\asus\downloads\bookshop\infrastructure\views\book\details.cshtml</a>
                     <p><strong>Danh mục:</strong> @Model.CategoryName</p>
 
-                    <p><strong>Mô tả:</strong> @Model.Description</p>
+                    <p><strong>Mô tả:</strong> @Html.Raw(Model.Description)</p>
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -106,10 +106,19 @@
                             <span class="badge bg-danger fs-5 py-2 px-3">Hết hàng</span>
                         }
                     </p>
-
                     <div class="d-flex gap-2">
-                        <button class="btn btn-dark flex-grow-1" @(Model.Status != Entities.Enums.EntityStatus.Active ? "disabled" : "")>Thêm vào giỏ hàng</button>
-                        <button class="btn btn-success flex-grow-1" @(Model.Status != Entities.Enums.EntityStatus.Active ? "disabled" : "")>Mua ngay</button>
+                        <!-- Trong View -->
+                        <form style="flex: 1;" asp-controller="Cart" asp-action="Add" method="post">
+                            <input asp-for="@Model.Id" name="bookId" hidden />
+                            <button class="btn btn-dark flex-grow-1" style="width: 100%;"
+                            @(Model.Status != Entities.Enums.EntityStatus.Active ? "disabled" : "")>
+                                Thêm vào giỏ hàng
+                            </button>
+                        </form>
+                        <form asp-controller="Order" asp-action="Confirm" style="flex: 1;">
+                            <input asp-for="@Model.Id" name="orderedBookIds" hidden />
+                            <button class="btn btn-success flex-grow-1" style="width: 100%;" @(Model.Status != Entities.Enums.EntityStatus.Active ? "disabled" : "")>Mua ngay</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -122,23 +131,25 @@
         <div class="col-md-6">
             <div class="feedback__form">
                 <h3>Để lại bình luận của bạn</h3>
-                <form>
+                <form asp-action="Add" asp-controller="Feedback">
+                    <input asp-for="@Model.Id" name="bookId" hidden />
                     <div class="mb-3">
                         <label class="form-label"><strong>Đánh giá của bạn:</strong></label>
                         <div class="feedback__rating">
-                            <span class="feedback__rating-item" data-value="1">★</span>
-                            <span class="feedback__rating-item" data-value="2">★</span>
-                            <span class="feedback__rating-item" data-value="3">★</span>
-                            <span class="feedback__rating-item" data-value="4">★</span>
-                            <span class="feedback__rating-item" data-value="5">★</span>
+                            <span class="feedback__rating-item" data-value="1" @(ViewBag.HasPurchased == false ? "disabled" : "")>★</span>
+                            <span class="feedback__rating-item" data-value="2" @(ViewBag.HasPurchased == false ? "disabled" : "")>★</span>
+                            <span class="feedback__rating-item" data-value="3" @(ViewBag.HasPurchased == false ? "disabled" : "")>★</span>
+                            <span class="feedback__rating-item" data-value="4" @(ViewBag.HasPurchased == false ? "disabled" : "")>★</span>
+                            <span class="feedback__rating-item" data-value="5" @(ViewBag.HasPurchased == false ? "disabled" : "")>★</span>
                         </div>
                         <input type="hidden" id="feedback__selectedRating" name="rating" value="0">
+
                     </div>
                     <div class="mb-3">
                         <label for="comment" class="form-label"><strong>Bình luận của bạn:</strong></label>
                         <textarea class="form-control" id="comment" rows="3" name="comment" placeholder="Nhập bình luận của bạn..." @(ViewBag.HasPurchased ? "" : "disabled")></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary" @(ViewBag.HasPurchased ? "" : "disabled")>Gửi bình luận</button>
+                    <button type="submit" class="btn btn-primary" id="submitFeedbackButton">Gửi bình luận</button>
                     @if (!ViewBag.HasPurchased)
                     {
                         <div class="alert alert-warning mt-3">
@@ -177,9 +188,31 @@
     <script>
         const stars = document.querySelectorAll('.feedback__rating-item');
         const ratingInput = document.getElementById('feedback__selectedRating');
+        const submitButton = document.getElementById('submitFeedbackButton');
+
+        // Kiểm tra nếu người dùng đã mua sản phẩm
+        const hasPurchased = @ViewBag.HasPurchased.ToString().ToLower();
+
+        // Hàm kiểm tra xem rating đã được chọn chưa và bật/tắt nút gửi
+        function checkRatingAndEnableButton() {
+            // Kiểm tra nếu rating đã được chọn (ratingInput.value > 0) và người dùng đã mua hàng
+            if (parseInt(ratingInput.value) > 0 && hasPurchased === true) {
+                submitButton.disabled = false; // Bật nút gửi bình luận
+            } else {
+                submitButton.disabled = true; // Giữ nút gửi bị vô hiệu hóa
+            }
+        }
+
+        // Nếu chưa mua sản phẩm, không cho chọn sao và vô hiệu hóa nút gửi
+        if (hasPurchased === "false") {
+            stars.forEach(star => star.setAttribute('disabled', true)); // Vô hiệu hóa các sao
+            submitButton.disabled = true; // Vô hiệu hóa nút gửi khi chưa mua
+        }
 
         stars.forEach(star => {
             star.addEventListener('click', () => {
+                if (hasPurchased === "false") return; // Nếu chưa mua, không cho phép chọn sao
+
                 const selectedRating = parseInt(star.getAttribute('data-value'));
                 ratingInput.value = selectedRating; // Cập nhật giá trị cho input ẩn
 
@@ -190,10 +223,18 @@
                 for (let i = 0; i < selectedRating; i++) {
                     stars[i].classList.add('feedback__rating-item--selected');
                 }
+                submitButton.disable = false;
+                // Kiểm tra và bật/tắt nút gửi bình luận
+                checkRatingAndEnableButton();
             });
         });
 
+        // Kiểm tra trạng thái rating khi trang được tải (phòng trường hợp người dùng đã chọn trước đó)
+        checkRatingAndEnableButton();
     </script>
+
+
+
     <script>
         function onChangeImage(thumbnail) {
             // Lấy đối tượng hình ảnh lớn

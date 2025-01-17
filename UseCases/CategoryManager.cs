@@ -55,11 +55,12 @@ namespace UseCases
                 await _categoryUnitOfWork.BeginTransactionAsync();
 
                 var foundCategory = await _categoryUnitOfWork.CategoryRepository.GetByIdAsync(id);
-
                 if (foundCategory == null)
                 {
                     return new AtomicTaskResult(AtomicTaskResultCodes.Failed, "Category not found.");
                 }
+
+                foundCategory.Status = EntityStatus.Suspended;
 
                 var books = await _categoryUnitOfWork.BookRepository.GetAllAsync();
                 foreach (var book in books)

@@ -1,0 +1,57 @@
+﻿@page
+@model Infrastructure.Areas.Admin.Pages.Publishers.IndexModel
+
+@{
+}
+
+<h1 class="text-center mb-4">Danh sách nhà xuất bản</h1>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<a asp-page="./Create" class="btn btn-success mb-3">Thêm nhà xuất bản</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th style="width: 33.3%;">Tên</t>
+            <th style="width: 33.3%;">Trạng thái</th>
+            <th style="width: 33.3%;">Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+         if(Model.Publishers != null && Model.Publishers.Any()){
+                foreach (var publisher in Model.Publishers)
+                {
+                    <tr>
+                        <td>@publisher.Name</td>
+                        <td>@publisher.Status</td>
+                        <td>
+                            <a href="@Url.Page("./Edit", new { id = publisher.Id })" class="btn btn-primary">Chỉnh sửa</a>
+
+                            @if (publisher.Status == Entities.Enums.EntityStatus.Active)
+                            {
+                                <form method="post" asp-page-handler="Suspend" asp-route-id="@publisher.Id" class="d-inline">
+                                    <button type="submit" class="btn btn-warning">Đình chỉ</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <!-- Nút "Activate" sẽ hiển thị khi trạng thái là Suspended -->
+                                <form method="post" asp-page-handler="Activate" asp-route-id="@publisher.Id" class="d-inline">
+                                    <button type="submit" class="btn btn-success">Kích hoạt</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+         }
+        
+
+        }
+    </tbody>
+</table>

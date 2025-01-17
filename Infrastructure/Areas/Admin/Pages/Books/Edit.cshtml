@@ -1,0 +1,94 @@
+﻿@page
+@model Infrastructure.Areas.Admin.Books.EditModel
+@{
+    ViewData["Title"] = "Edit Book";
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <h1 class="text-center mb-4">Cập nhật sách</h1>
+
+    <form method="post" class="border p-4 bg-light rounded" enctype="multipart/form-data">
+        <div>
+            <h3>Danh sách ảnh</h3>
+            <div class="image-gallery d-flex flex-wrap">
+                @if (Model.StoredImages != null)
+                {
+                    foreach (var image in Model.StoredImages)
+                    {
+                        <label class="image-label m-2">
+                            <input name="DeletedImages" value="@image" type="checkbox" class="image-checkbox" />
+                            <img alt="Image" src="@image" style="width: 100px; height: auto;" />
+                        </label>
+                    }
+                }
+            </div>
+        </div>
+
+        <input asp-for="Book.Id" hidden />
+
+        <div class="mb-3">
+            <label asp-for="Book.Title" class="form-label">Tên sách</label>
+            <input asp-for="Book.Title" class="form-control" />
+            <span asp-validation-for="Book.Title" class="text-danger d-block mt-1"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Book.Author" class="form-label">Tác giả</label>
+            <input asp-for="Book.Author" class="form-control" />
+            <span asp-validation-for="Book.Author" class="text-danger d-block mt-1"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Book.Description" class="form-label">Mô tả</label>
+            <textarea asp-for="Book.Description" class="form-control"></textarea>
+            <span asp-validation-for="Book.Description" class="text-danger d-block mt-1"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Book.Price" class="form-label">Giá</label>
+            <input asp-for="Book.Price" class="form-control" />
+            <span asp-validation-for="Book.Price" class="text-danger d-block mt-1"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Book.Stock" class="form-label">Số lượng</label>
+            <input asp-for="Book.Stock" class="form-control" />
+            <span asp-validation-for="Book.Stock" class="text-danger d-block mt-1"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Book.DiscountPercentage" class="form-label">Phần trăm giảm giá</label>
+            <input asp-for="Book.DiscountPercentage" class="form-control" />
+            <span asp-validation-for="Book.DiscountPercentage" class="text-danger d-block mt-1"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="UploadedImages" class="form-label">Chọn hình ảnh: </label>
+            <input asp-for="UploadedImages" class="form-control" />
+            <span asp-validation-for="UploadedImages" class="text-danger"></span>
+        </div>
+
+        <div class="row mb-3">
+            <!-- Category Dropdown -->
+            <div class="col-md-6">
+                <label for="Book_CategoryId" class="form-label">Danh mục</label>
+                <select asp-for="Book.CategoryId" asp-items="ViewBag.Categories" class="form-select" id="Book_CategoryId" required>
+                    <option value="">Select Category</option>
+                </select>
+            </div>
+
+            <!-- Publisher Dropdown -->
+            <div class="col-md-6">
+                <label for="Book_PublisherId" class="form-label">Nhà xuất bản</label>
+                <select asp-for="Book.PublisherId" asp-items="ViewBag.Publishers" class="form-select" id="Book_PublisherId" required>
+                    <option value="">Select Publisher</option>
+                </select>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Lưu thay đổi</button>
+    </form>
+
+    <a href="@Url.Page("./Index")" class="btn btn-secondary mt-3">Trở về danh sách</a>
+</div>

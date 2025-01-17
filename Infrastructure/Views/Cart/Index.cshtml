@@ -1,0 +1,81 @@
+﻿@model IEnumerable<dynamic>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Giỏ hàng của bạn</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">Giỏ hàng của bạn hiện tại trống.</div>
+    }
+    else
+    {
+        <form asp-action="Confirm" method="post" asp-controller="Order">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="thead-dark">
+                        <tr class="text-center">
+                            <th>Chọn</th>
+                            <th>Tên Sản Phẩm</th>
+                            <th>Giá</th>
+                            <th>Trạng thái</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="text-center">
+                                    <input type="checkbox"
+                                           class="bookCheckbox form-check-input"
+                                           name="orderedBookIds"
+                                           value="@item.BookId"
+                                    @(item.IsSuspended ? "disabled" : "") />
+                                </td>
+                                <td class="text-center">@item.BookTitle</td>
+                                <td class="text-center">@string.Format("{0:N0} đ", item.BookPrice)</td>
+                                <td class="text-center">
+                                    @if (item.IsSuspended)
+                                    {
+                                        <span class="text-danger">@item.SuspendedMessage</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-success">Còn hàng</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <a asp-action="Delete" asp-controller="Cart" asp-route-id="@item.Id" class="btn btn-danger btn-sm">
+                                        Xóa
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-success btn-lg" id="checkoutButton" disabled>
+                    Tiến hành thanh toán
+                </button>
+            </div>
+        </form>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        // Lắng nghe sự kiện thay đổi trên tất cả checkbox
+        document.querySelectorAll('.bookCheckbox').forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                // Kiểm tra nếu có checkbox nào được chọn
+                let isChecked = Array.from(document.querySelectorAll('.bookCheckbox'))
+                    .some(checkbox => checkbox.checked);
+
+                // Bật/tắt nút thanh toán dựa trên tình trạng checkbox
+                document.getElementById('checkoutButton').disabled = !isChecked;
+            });
+        });
+    </script>
+}

@@ -11,8 +11,8 @@ namespace Infrastructure.SqlServer.Repositories.SqlServer.DataContext
     public class PaymentTransaction
     {
         public int Id { get; set; }
+        public string BankCode { get; set; } = default!;
         public long TransactionId { get; set; }
-        public PaymentGateway Gateway { get; set; }
         [Column(TypeName = "decimal(18,2)")]
         public decimal Amount { get; set; }
         public DateTime CreatedAt { get; set; }

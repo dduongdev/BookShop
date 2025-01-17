@@ -1,0 +1,17 @@
+﻿/* Styles for Login, Register, User, and Logout */
+/* Thêm màu chữ đen cho các nút */
+.btn-login, .btn-register, .btn-user, .btn-logout {
+    color: #1e3c58 !important; /* Xanh biển tối */
+}
+
+    /* Hiệu ứng hover */
+    .btn-login:hover, .btn-register:hover, .btn-user:hover, .btn-logout:hover {
+        color: #0288d1 !important; /* Màu chữ khi hover (màu xanh dương sáng) */
+        transform: scale(1.1);
+        transition: 0.2s ease-in-out;
+    }
+
+    /* Hiệu ứng khi active */
+    .btn-login:active, .btn-register:active, .btn-user:active, .btn-logout:active {
+        transform: scale(0.95);
+    }

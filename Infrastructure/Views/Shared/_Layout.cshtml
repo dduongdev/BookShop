@@ -8,44 +8,210 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Infrastructure.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/footer.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/scroll_to_top.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/header.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/login_register.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/search.css" asp-append-version="true" />
+    <!-- Bootstrap CSS (CDN) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome (CDN) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
     @RenderSection("Styles", required: false)
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Infrastructure</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+    <header class="sticky-top shadow">
+        <nav class="navbar navbar-expand-lg container">
+            <!-- Logo -->
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                <i class="fas fa-crown"></i> BookShop
+            </a>
+
+            <!-- Navbar Toggler -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Navbar Links -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <!-- Categories Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="categoriesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-th rotate-icon"></i> Danh mục
+                        </a>
+                        <ul class="dropdown-menu dropdown-enhanced animate__animated animate__fadeInDown" aria-labelledby="categoriesDropdown">
+                            <li><a class="dropdown-item enhanced-item" href="#"><i class="fas fa-book"></i> Văn Học</a></li>
+                            <li><a class="dropdown-item enhanced-item" href="#"><i class="fas fa-flask"></i> Khoa Học</a></li>
+                            <li><a class="dropdown-item enhanced-item" href="#"><i class="fas fa-brain"></i> Kỹ Năng Sống</a></li>
+                            <li><a class="dropdown-item enhanced-item" href="#"><i class="fas fa-scroll"></i> Lịch Sử</a></li>
+                            <li><a class="dropdown-item enhanced-item" href="#"><i class="fas fa-dollar-sign"></i> Kinh Tế</a></li>
+                            <li><a class="dropdown-item enhanced-item" href="#"><i class="fas fa-laptop-code"></i> Sách Lập Trình</a></li>
+                            <li><a class="dropdown-item enhanced-item" href="#"><i class="fas fa-money-bill-wave"></i> Sách Dạy Làm Giàu</a></li> <!-- Mới thêm -->
+                            <!-- Thêm các danh mục khác nếu cần -->
+                        </ul>
+                    </li>
+
+                    <!-- Privacy -->
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Book" asp-action="Index">
+                            <i class="fas fa-book"></i> Sản phẩm
+                        </a>
+                    </li>
+
+                    <!-- Contact -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-envelope"></i> Liên hệ
+                        </a>
+                    </li>
+                </ul>
+
+
+                <!-- Search, Cart, and Auth -->
+                <div class="d-flex ms-lg-3 align-items-center">
+                    <!-- Search -->
+                    <form method="get" class="d-flex me-3" id="searchForm" asp-controller="Book" asp-action="Index">
+                        <div class="input-group">
+                            <input type="search" class="form-control search-input" name="titleSearchKeyword" id="searchQuery" placeholder="Tìm kiếm..." aria-label="Search">
+                            <button class="btn btn-search" type="submit" id="searchBtn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+
+
+                    <!-- Cart -->
+                    <a href="/cart" class="btn btn-cart me-3 position-relative" id="cart-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="View Cart">
+                        <i class="fas fa-shopping-cart fa-lg"></i>
+                    </a>
+
+
+                    <!-- Login/Register -->
+                    <div class="d-flex auth-links align-items-center">
+                        @if (User?.Identity?.IsAuthenticated ?? false) // Kiểm tra xem người dùng đã đăng nhập chưa
+                        {
+                            <span class="me-2" style="    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    overflow: hidden;
+    width: 140px;">Welcome, @User.Identity.Name!</span> <!-- Hiển thị tên người dùng -->
+
+                            <a asp-action="Index" asp-controller="User" class="btn btn-user me-2" id="userButton">
+                                <i class="fas fa-user"></i> User
+                            </a>
+
+                            <a asp-action="Logout" asp-controller="Authentication" class="btn btn-logout me-2" id="logoutButton">
+                                <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-action="Login" asp-controller="Authentication" class="btn btn-login me-2" id="loginButton">
+                                <i class="fas fa-sign-in-alt"></i> Đăng nhập
+                            </a>
+                            <a asp-action="Signup" asp-controller="Authentication" class="btn btn-register me-2" id="registerButton">
+                                <i class="fas fa-user-plus"></i> Đăng ký
+                            </a>
+                        }
+                    </div>
+
                 </div>
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - Infrastructure - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <!-- Scroll to Top -->
+    <a href="#" class="btn back-to-top position-fixed" style="display: none; z-index: 1000;">
+        <i class="fa-solid fa-arrow-up"></i>
+    </a>
+
+    <!-- Footer -->
+    <footer class="py-4 mt-5">
+        <div class="container text-center">
+            <!-- Footer Text -->
+            <p class="mb-2">&copy; 2024 - BookShop</p>
+
+            <!-- Social Media Links -->
+            <div class="social-icons mb-4">
+                <a href="#" class="mx-2">
+                    <i class="fab fa-facebook fa-lg"></i>
+                </a>
+                <a href="#" class="mx-2">
+                    <i class="fab fa-twitter fa-lg"></i>
+                </a>
+                <a href="#" class="mx-2">
+                    <i class="fab fa-instagram fa-lg"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="container d-flex flex-wrap justify-content-between">
+            <!-- Contact us -->
+            <div class="footer-column">
+                <h5 class="text-dark">Contact Us</h5>
+                <p class="text-muted mb-1">Email: info@BookShop.com</p>
+                <p class="text-muted">Phone: +123 456 7890</p>
+            </div>
+
+            <!-- Support-->
+            <div class="footer-column">
+                <h5 class="text-dark">Support</h5>
+                <ul class="list-inline mb-0">
+                    <li class="list-inline-item"><a href="#" class="text-decoration-none">FAQ</a></li>
+                    <li class="list-inline-item"><a href="#" class="text-decoration-none">Customer Support</a></li>
+                    <li class="list-inline-item"><a href="#" class="text-decoration-none">Shipping & Returns</a></li>
+                </ul>
+            </div>
+
+            <!-- Policies -->
+            <div class="footer-column">
+                <h5 class="text-dark">Policies</h5>
+                <ul class="list-inline mb-0">
+                    <li class="list-inline-item"><a href="#" class="text-decoration-none">Privacy Policy</a></li>
+                    <li class="list-inline-item"><a href="#" class="text-decoration-none">Cookie Policy</a></li>
+                    <li class="list-inline-item"><a href="#" class="text-decoration-none">Terms & Conditions</a></li>
+                </ul>
+            </div>
+
+            <!-- Our Services -->
+            <div class="footer-column">
+                <h5 class="text-dark">Our Services</h5>
+                <ul class="list-inline mb-0">
+                    <li class="list-inline-item"><a href="#" class="text-decoration-none">Web Development</a></li>
+                    <li class="list-inline-item"><a href="#" class="text-decoration-none">Mobile Apps</a></li>
+                    <li class="list-inline-item"><a href="#" class="text-decoration-none">Digital Marketing</a></li>
+                </ul>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="quick-links">
+                <h5 class="text-dark">Quick Links</h5>
+                <ul class="list-inline">
+                    <li class="list-inline-item"><a href="#" class="text-decoration-none">Home</a></li>
+                    <li class="list-inline-item"><a href="#" class="text-decoration-none">Shop</a></li>
+                    <li class="list-inline-item"><a href="#" class="text-decoration-none">Blog</a></li>
+                    <li class="list-inline-item"><a href="#" class="text-decoration-none">Contact Us</a></li>
+                </ul>
+            </div>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/scroll_to_top.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

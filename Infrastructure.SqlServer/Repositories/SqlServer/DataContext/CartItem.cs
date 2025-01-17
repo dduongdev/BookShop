@@ -11,7 +11,6 @@ namespace Infrastructure.SqlServer.Repositories.SqlServer.DataContext
     {
         public int Id { get; set; }
         public int BookId { get; set; }
-        public required int Quantity { get; set; }
         public int UserId { get; set; }
 
         public virtual Book Book { get; set; } = default!;

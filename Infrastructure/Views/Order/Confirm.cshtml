@@ -1,0 +1,164 @@
+﻿@model IEnumerable<Infrastructure.Models.ViewModels.BookCardVM>
+
+@{
+    var userDeliveryAddress = ViewBag.DefaultDeliveryAddress as string;
+    var userDeliveryPhone = ViewBag.DefaultDeliveryPhone as string;
+}
+
+<form asp-action="Create" method="post">
+    <div class="container-fluid bg-light py-5">
+        <div class="row justify-content-center">
+            <!-- Left Column: Delivery Information -->
+            <div class="col-md-6 col-lg-5 mb-4">
+                <div class="card shadow-lg rounded-lg border-0 p-4">
+                    <h3 class="text-center text-primary mb-4">Delivery Information</h3>
+                    <div class="mb-3">
+                        <label for="DeliveryAddress" class="form-label">Delivery Address:</label>
+                        <input type="text" id="DeliveryAddress" name="DeliveryAddress" class="form-control" value="@userDeliveryAddress" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="DeliveryPhone" class="form-label">Delivery Phone:</label>
+                        <input type="text" id="DeliveryPhone" name="DeliveryPhone" class="form-control" value="@userDeliveryPhone" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="PaymentMethod" class="form-label">Payment Method:</label>
+                        <select name="PaymentMethod" id="PaymentMethod" class="form-select" asp-items="Html.GetEnumSelectList<Entities.Enums.PaymentMethod>()">
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Book Information -->
+            <div class="col-md-6 col-lg-7 mb-4">
+                <div class="card shadow-lg rounded-lg border-0 p-4">
+                    <h3 class="text-center text-primary mb-4">Book Information</h3>
+                    @{
+                        var index = 0;
+                        foreach (var book in Model)
+                        {
+                            <div class="card mb-4 shadow-sm rounded-lg border-0">
+                                <div class="card-body row align-items-center">
+                                    <div class="col-md-4">
+                                        <!-- Book Image -->
+                                        <img src="@book.Image" alt="@book.Title" class="img-fluid rounded-lg" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="hidden" name="OrderItems[@index].BookId" value="@book.Id" />
+                                        <h5 class="card-title text-dark font-weight-bold">@book.Title</h5>
+                                        <p class="mb-1"><strong>Author:</strong> @book.Author</p>
+
+                                        <!-- Price and Discount -->
+                                        <div class="d-flex justify-content-between mb-3">
+                                            <p class="text-success font-weight-bold">
+                                                <strong>Price:</strong> <span class="fw-bold text-primary">@String.Format(System.Globalization.CultureInfo.GetCultureInfo("vi-VN"), "{0:c}", book.Price)</span>
+                                            </p>
+                                            <p class="text-danger">
+                                                <strong>Discount:</strong> @(book.DiscountPercentage.HasValue ? book.DiscountPercentage.Value.ToString("F2") + "%" : "No Discount")
+                                            </p>
+                                        </div>
+
+                                        <!-- Price and Quantity Inputs -->
+                                        <div class="d-flex justify-content-between mb-3">
+                                            <div class="w-45">
+                                                <label for="PriceAtPurchase_@book.Id" class="form-label">Price At Purchase:</label>
+                                                <input id="PriceAtPurchasePerBook_@book.Id" value="@((book.DiscountPercentage.HasValue) ? book.Price * (1 - book.DiscountPercentage.Value / 100) : book.Price)" name="OrderItems[@index].PriceAtPurchase" hidden />
+                                                <input type="text" id="PriceAtPurchase_@book.Id" value="@(((book.DiscountPercentage.HasValue) ? book.Price * (1 - book.DiscountPercentage.Value / 100) : book.Price).ToString("F2"))" class="form-control" readonly />
+                                            </div>
+
+                                            <div class="w-45">
+                                                <label for="Quantity_@book.Id" class="form-label">Quantity:</label>
+                                                <input type="number" id="Quantity_@book.Id" name="OrderItems[@index].Quantity"
+                                                value="1" min="1" max="@book.Stock" class="form-control" required />
+                                            </div>
+                                        </div>
+
+                                        <!-- Stock Information -->
+                                        <div class="text-muted mb-3">
+                                            <strong>Stock:</strong> @book.Stock
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            index++;
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Tổng giá trị đơn hàng -->
+        <div class="container-fluid py-3">
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-5">
+                    <div class="card shadow-lg rounded-lg border-0 p-4">
+                        <h5 class="text-center text-primary mb-4">Total Order Value</h5>
+                        <div class="d-flex justify-content-between mb-3">
+                            <label for="TotalAmount" class="form-label">Total Amount:</label>
+                            <input type="text" id="TotalAmount" name="TotalAmount" class="form-control" value="0.00" readonly />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center">
+            <button type="submit" class="btn btn-success btn-lg rounded-pill px-5 py-3">Confirm Order</button>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Lấy tất cả các input số lượng trong form
+            document.querySelectorAll('input[name^="OrderItems"]').forEach(function (input) {
+                if (input.id.startsWith('Quantity')) {
+                    input.addEventListener('input', function (event) {
+                        var quantityInput = event.target;
+                        var bookId = quantityInput.id.split('_')[1]; // Lấy ID sách từ tên input
+
+                        // Lấy giá trị của PriceAtPurchasePerBook từ trường ẩn
+                        var priceAtPurchasePerBook = parseFloat(document.getElementById('PriceAtPurchasePerBook_' + bookId).value);
+                        var quantity = parseInt(quantityInput.value);
+
+                        // Kiểm tra nếu giá trị nhập vào là hợp lệ
+                        if (isNaN(priceAtPurchasePerBook) || isNaN(quantity)) {
+                            console.error('Invalid price or quantity values for book ' + bookId);
+                            return;
+                        }
+
+                        // Tính tổng giá trị của sách này (giá sách * số lượng)
+                        var totalPriceForBook = priceAtPurchasePerBook * quantity;
+
+                        // Cập nhật giá trị trong trường PriceAtPurchase
+                        var priceAtPurchaseField = document.getElementById('PriceAtPurchase_' + bookId);
+                        priceAtPurchaseField.value = totalPriceForBook.toFixed(2); // Hiển thị với 2 chữ số thập phân
+
+                        // Cập nhật tổng giá trị đơn hàng
+                        updateTotalAmount();  // Cập nhật tổng giá trị sau khi thay đổi
+                    });
+                }
+            });
+
+            // Hàm cập nhật tổng giá trị đơn hàng
+            function updateTotalAmount() {
+                var totalAmount = 0;
+
+                // Lặp qua tất cả các giá trị PriceAtPurchase và cộng lại
+                document.querySelectorAll('input[id^="PriceAtPurchase_"]').forEach(function (input) {
+                    totalAmount += parseFloat(input.value) || 0; // Nếu không hợp lệ, tính là 0
+                });
+
+                // Cập nhật giá trị trong input Tổng số tiền
+                var totalAmountField = document.getElementById('TotalAmount');
+                totalAmountField.value = totalAmount.toFixed(2); // Hiển thị với 2 chữ số thập phân
+            }
+
+            // Gọi hàm cập nhật tổng giá trị khi trang được tải để tính toán giá trị ban đầu
+            updateTotalAmount();
+        });
+    </script>
+}
+
